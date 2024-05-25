@@ -1,0 +1,29 @@
+.homeButton :hover {
+  background-color: red;
+}
+.featureContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.cardContainer {
+  display: flex;
+  flex-direction: row;
+}
+@media screen and (max-width: 500px) {
+  .featureContainer {
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+  }
+  
+}
+@media screen and (max-width: 650px) {
+  .cardContainer {
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+  }
+  
+  
+}

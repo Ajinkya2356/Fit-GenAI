@@ -1,0 +1,22 @@
+export const defaultValues = {
+  registerTitle: "Register",
+  loginTitle: "Login",
+  fileButtonText: "Upload Profile Picture",
+  registerButtonText: "Register",
+  registerMessage: "Registered Successfully",
+  loginButtonTitle: "Login",
+  loginMessage: "Logged In Successfully",
+  homeTitleTextline1: "It doesn't get easier",
+  homeTitleTextline2: "you get better",
+  homeButtonText: "View all challenges",
+  featureTitleText: "Join the new challenges ",
+  cardButtonText: "Join",
+  changePasswordTitle: "Change Password",
+  changePasswordButtonText: "Change Password",
+  forgotPasswordTitle: "Forgot Password",
+  forgotPasswordButtonText: "Submit",
+  resetPasswordTitle: "Reset Password",
+  resetPasswordButtonText: "Reset Password",
+  AIFeatureText:"Transform Your Training with AI-Generated Workouts",
+  AIFeatureDescription:"Experience the future of fitness with our AI feature. It generates workout plans that evolve with you, providing the right challenge at the right time to optimize your progress."
+};
