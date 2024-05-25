@@ -2,36 +2,24 @@ import {
   Chip,
   Container,
   Typography,
-  Switch,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { Carousel } from "react-responsive-carousel";
-import { Link } from "react-router-dom";
-import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
-import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  completeTask,
-  getChallengeTask,
-  getTask,
-} from "../../../Redux/challenge/challengeSlice";
-import { addCoins } from "../../../Redux/user/userSlice";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import getContrast from "../common/getRandomColor";
 const ExerciseDetail = ({ exercise }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const difficulty_levelToColorMap = {
     beginner: "green",
     intermediate: "orange",
     advanced: "red",
   };
   const { loading } = useSelector((state) => state.CHALLENGE);
-  /*  
-  useEffect(() => {
-    if (!currentTask) {
-      dispatch(getTask(id));
-    }
-  }, [dispatch, id, currentTask]);
-  console.log(currentTask); */
+  const bgColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
   return (
     <Container
       style={{
@@ -71,30 +59,13 @@ const ExerciseDetail = ({ exercise }) => {
                 gap: "10px",
               }}
             >
-              <Typography
-                variant="body2"
+              <Chip
+                label={exercise.category?.[0].name}
                 style={{
-                  color: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "5px",
+                  backgroundColor: bgColor,
+                  color: getContrast(bgColor),
                 }}
-              >
-                <ThumbUpOffAltIcon style={{ color: "white" }} />
-                {exercise.likedBy.length}
-              </Typography>
-              <Typography
-                variant="body2"
-                style={{
-                  color: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "5px",
-                }}
-              >
-                <ThumbDownOffAltIcon style={{ color: "white" }} />
-                {exercise.dislikedBy.length}
-              </Typography>
+              />
               <Chip
                 label={exercise.difficulty_level.toUpperCase()}
                 style={{
@@ -116,32 +87,21 @@ const ExerciseDetail = ({ exercise }) => {
               width: "100%",
             }}
           >
-            <div style={{ maxWidth: "50%" }}>
-              <Carousel
-                showStatus={false}
-                showIndicators={false}
-                showArrows={false}
-                autoPlay={true}
-                infiniteLoop={true}
-                showThumbs={false}
-              >
-                {exercise.image_url.map((picture, index) => {
-                  return (
-                    <div key={index}>
-                      <img
-                        src={picture}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          borderRadius: "20px",
-                        }}
-                        alt="exercise"
-                      />
-                    </div>
-                  );
-                })}
-              </Carousel>
+            <div style={{ width: "50%" }}>
+              <div>
+                <video
+                  controls
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "10px",
+                  }}
+                >
+                  <source src={exercise.video_url} type="video/mp4" />
+                  Your browser does not support the video tag, or the video
+                  cannot be played.
+                </video>
+              </div>
             </div>
             <Typography
               variant="body1"
@@ -156,16 +116,13 @@ const ExerciseDetail = ({ exercise }) => {
               textOverflow={"ellipsis"}
             >
               {exercise.description}&nbsp;&nbsp;
-              <Link
-                style={{
-                  color: "white",
-                  textDecoration: "underline",
-                  cursor: "pointer",
+              <IconButton
+                onClick={() => {
+                  navigate(`/exercise/${exercise._id}`);
                 }}
-                to={`/exercise/${exercise._id}`}
               >
-                Learn More
-              </Link>
+                <OpenInNewIcon />
+              </IconButton>
             </Typography>
           </div>
         </>

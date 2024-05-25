@@ -87,7 +87,7 @@ const Challenges = () => {
               <IconButton
                 onClick={() => {
                   setOpen(true);
-                  /* navigate("/challenges/create"); */
+                  
                 }}
                 sx={{ backgroundColor: "#4caf50" }}
               >

@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { globalErrorCatch } from "../workout/workoutSlice";
-import { Task } from "../../../../backend/src/Models/task.model";
 import { loadUser } from "../user/userSlice";
 export const getChallengeAction = (keyword, status) => async (dispatch) => {
   try {
@@ -213,6 +212,7 @@ export const createTask = (taskData) => async (dispatch) => {
       config
     );
     dispatch(createTaskSuccess());
+    dispatch(getChallengeTask(taskData.challenge));
   } catch (e) {
     dispatch(
       globalErrorCatch(
@@ -327,6 +327,31 @@ export const creditCoins = (coins, userId) => async (dispatch) => {
     );
   }
 };
+export const leaderBoard = () => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      return;
+    }
+    dispatch(getLeaderReq());
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    };
+    const { data } = await axios.get(
+      `http://localhost:8000/api/v1/users/leaderBoard`,
+      config
+    );
+    dispatch(getLeaderSuccess(data.data));
+  } catch (error) {
+    globalErrorCatch(
+      e.response.data.message ? e.response.data.message : e.message
+    );
+  }
+};
 const challengeSlice = createSlice({
   name: "challenge",
   initialState: {
@@ -383,6 +408,13 @@ const challengeSlice = createSlice({
       state.taskLoading = false;
       state.currentTask = action.payload;
     },
+    getLeaderReq: (state) => {
+      state.leadLoading = true;
+    },
+    getLeaderSuccess: (state, action) => {
+      state.leadLoading = false;
+      state.userLeaderBoard = action.payload;
+    },
   },
 });
 export const {
@@ -400,5 +432,7 @@ export const {
   getTaskSucc,
   setSingleTaskReq,
   setSingleTaskSuccess,
+  getLeaderReq,
+  getLeaderSuccess,
 } = challengeSlice.actions;
 export default challengeSlice.reducer;

@@ -28,17 +28,18 @@ const Footer = () => {
           <div className={styles.listContainer}>
             <Typography variant="h6">Home</Typography>
 
-            <Typography variant="h6">About</Typography>
+            <Typography variant="h6">Workouts</Typography>
 
-            <Typography variant="h6">Services</Typography>
+            <Typography variant="h6">Exercises</Typography>
 
-            <Typography variant="h6">Contact</Typography>
+            <Typography variant="h6">Challenges</Typography>
           </div>
         </div>
         <div>
-          <Typography variant="h5">Stayed Tuned</Typography>
-          <Typography variant="h6" marginTop="3%">
-            Subscribe Now and Get Access to Exclusive Workouts and Tips
+          <Typography variant="h5">Stay Fit, Stay Healthy</Typography>
+          <Typography variant="h6" style={{ marginTop: "3%" }}>
+            Subscribe now for exclusive fitness workouts, tips, and health
+            advice
           </Typography>
         </div>
         <div>

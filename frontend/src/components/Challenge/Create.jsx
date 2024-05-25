@@ -210,7 +210,7 @@ const Create = () => {
             }
             dispatch(createChallenge(challenge));
             navigate(`/my-challenges`);
-            Notification("success", "Challenge Created Successfully");
+            Notification("Challenge created successfully", "success");
           }}
         >
           Create

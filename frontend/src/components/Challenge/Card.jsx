@@ -8,6 +8,7 @@ import {
   Chip,
   Avatar,
   Box,
+  Hidden,
 } from "@mui/material";
 import UpcomingIcon from "@mui/icons-material/Upcoming";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
@@ -30,7 +31,7 @@ const ChallengeCard = ({ challenge, onClick }) => {
       <CardMedia
         component="img"
         height="194"
-        style={{objectFit:"contain"}}
+        style={{ objectFit: "contain" }}
         image={
           challenge.cover_image
             ? challenge.cover_image
@@ -76,7 +77,16 @@ const ChallengeCard = ({ challenge, onClick }) => {
             <PeopleAltIcon /> {challenge.participants.length}
           </Typography>
         </Typography>
-        <Typography variant="body2" color="text.secondary" margin="5px">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          margin="5px"
+          textOverflow={"ellipsis"}
+          overflow={"hidden"}
+          style={{
+            maxHeight: "100px",
+          }}
+        >
           {challenge.description}
         </Typography>
         <Box>
@@ -91,6 +101,7 @@ const ChallengeCard = ({ challenge, onClick }) => {
             variant="body2"
             color="text.secondary"
             className={style.Align}
+            textOverflow={"ellipsis"}
           >
             <LocationSearchingIcon /> {challenge.goal}
           </Typography>

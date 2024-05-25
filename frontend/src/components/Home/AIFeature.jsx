@@ -30,7 +30,6 @@ const AIFeature = () => {
           alignItems: "center",
           justifyContent: "center",
           marginTop: "20px",
-          
         }}
       >
         <img
@@ -44,9 +43,11 @@ const AIFeature = () => {
           }}
           alt="AI Logo"
         />
-        <div style={{
-          width: "50%",
-        }}>
+        <div
+          style={{
+            width: "50%",
+          }}
+        >
           <Typography
             variant="h5"
             gutterBottom

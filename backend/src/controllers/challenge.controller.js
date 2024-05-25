@@ -368,6 +368,27 @@ const getChallengeTask = AsyncHandler(async (req, res) => {
         from: "exercises",
         localField: "exercise",
         foreignField: "_id",
+        pipeline: [
+          {
+            $lookup: {
+              from: "categories",
+              localField: "categoryID",
+              foreignField: "_id",
+              as: "category",
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+              name: 1,
+              description: 1,
+              category: "$category",
+              difficulty_level: 1,
+              video_url: 1,
+              createdBy: 1,
+            },
+          },
+        ],
         as: "exercise",
       },
     },
@@ -392,7 +413,11 @@ const completeTask = AsyncHandler(async (req, res) => {
   if (!task) {
     throw new apiError(404, "Task not found");
   }
-  task.completed = !task.completed;
+  if (task.completed.includes(req.user._id)) {
+    task.completed.pull(req.user._id);
+  } else {
+    task.completed.push(req.user._id);
+  }
   await task.save();
   return res
     .status(200)

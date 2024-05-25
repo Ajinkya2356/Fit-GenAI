@@ -3,10 +3,10 @@ import { User } from "../Models/user.model.js";
 import apiError from "../utils/apiError.js";
 import ApiResponse from "../utils/apiResponse.js";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
-import { upload } from "../Middlewares/multer.middleware.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
 import zod from "zod";
+import { Challenge } from "../Models/challenge.model.js";
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -419,6 +419,128 @@ const addCoins = AsyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, { user }, "Coins added successfully"));
 });
+const getLeaderBoard = AsyncHandler(async (req, res) => {
+  try {
+    let users = await User.aggregate([
+      {
+        $project: {
+          _id: 1,
+          username: 1,
+          avatar: 1,
+          coinBalance: 1,
+        },
+      },
+      {
+        $sort: {
+          coinBalance: -1,
+        },
+      },
+    ]).limit(10);
+    users = users.map((user, index) => ({
+      ...user,
+      rank: index + 1,
+    }));
+    const check = users.some(
+      (user) => user._id.toString() === req.user._id.toString()
+    );
+    if (!check) {
+      const currentUser = await User.findById(req.user._id).select(
+        "_id username avatar coinBalance"
+      );
+      const currentUserRank =
+        (await User.countDocuments({
+          coinBalance: { $gt: currentUser.coinBalance },
+        })) + 1;
+      users = users.slice(0, 9);
+      users.push({
+        _id: currentUser._id,
+        username: currentUser.username,
+        avatar: currentUser.avatar,
+        coinBalance: currentUser.coinBalance,
+        rank: currentUserRank,
+      });
+      users.sort((a, b) => b.coinBalance - a.coinBalance);
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, users, "LeaderBoard Fetched Successfully"));
+  } catch (error) {
+    throw new apiError(404, error.message);
+  }
+});
+const getChallengeLeaderBoard = AsyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    let users = await Challenge.aggregate([
+      {
+        $lookup: {
+          from: "User",
+          localField: "participants",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                username: 1,
+                avatar: 1,
+                coinBalance: 1,
+              },
+            },
+            {
+              $sort: {
+                coinBalance: -1,
+              },
+            },
+            {
+              $limit: 10,
+            },
+          ],
+          as: "users",
+        },
+      },
+      {
+        $project: {
+          users: "$users",
+        },
+      },
+    ]);
+
+    users = users.map((user, index) => ({
+      ...user,
+      rank: index + 1,
+    }));
+
+    const check = users.some(
+      (user) => user._id.toString() === req.user._id.toString()
+    );
+    const isMember=await Challenge.findById(id)
+    if (!check) {
+      const currentUser = await User.findById(req.user._id).select(
+        "_id username avatar coinBalance"
+      );
+      const currentUserRank =
+        (await User.countDocuments({
+          coinBalance: { $gt: currentUser.coinBalance },
+        })) + 1;
+      users = users.slice(0, 9);
+      users.push({
+        _id: currentUser._id,
+        username: currentUser.username,
+        avatar: currentUser.avatar,
+        coinBalance: currentUser.coinBalance,
+        rank: currentUserRank,
+      });
+      users.sort((a, b) => b.coinBalance - a.coinBalance);
+    }
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, users, "LeaderBoard Fetched Successfully"));
+  } catch (error) {
+    throw new apiError(404, error.message);
+  }
+});
 export {
   registerUser,
   loginUser,
@@ -434,4 +556,5 @@ export {
   getSingleUser,
   getMultipleUsers,
   addCoins,
+  getLeaderBoard,
 };

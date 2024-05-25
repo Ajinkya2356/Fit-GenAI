@@ -17,19 +17,19 @@ import {
   getSingleChallenge,
   leaveChallenge,
 } from "../../../Redux/challenge/challengeSlice";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
+import Typist from "react-typist";
 import { useParams } from "react-router-dom";
 import Loader from "../common/Loader";
 import style from "./card.module.css";
 import UpcomingIcon from "@mui/icons-material/Upcoming";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { FormalDate } from "./Card";
-import EditCalendarIcon from "@mui/icons-material/EditCalendar";
 import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
 import Checkbox from "@mui/material/Checkbox";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import LocationSearchingIcon from "@mui/icons-material/LocationSearching";
 import CategoryIcon from "@mui/icons-material/Category";
-import BorderColorIcon from "@mui/icons-material/BorderColor";
 import Button from "@mui/material/Button";
 import { joinChallenge } from "../../../Redux/challenge/challengeSlice";
 import { colorToStatusMap } from "./Challenges";
@@ -41,6 +41,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ExerciseDetail from "./ExerciseDetail";
 import CustomTimeline from "../common/Timeline";
 import Notification from "../common/Notification";
+import LeaderBoard from "./LeaderBoard";
 const DetailedChallenge = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ const DetailedChallenge = () => {
     dispatch(getSingleChallenge(id));
     dispatch(getChallengeTask(id));
   }, [dispatch]);
+  const [createFlag, setCreateFlag] = useState(false);
   const { challenge, loading, Task } = useSelector((state) => state.CHALLENGE);
   const { user } = useSelector((state) => state.USER);
   const [open, setOpen] = useState(false);
@@ -58,6 +60,7 @@ const DetailedChallenge = () => {
   const joined = challenge?.participants?.filter((p) => {
     return p._id === user?.user?._id;
   });
+  useEffect(() => {}, [Task]);
   return (
     <Container
       maxWidth={false}
@@ -81,6 +84,9 @@ const DetailedChallenge = () => {
             justifyContent="space-between"
             alignSelf="flex-end"
             gap={2}
+            style={{
+              padding: "0px 10px",
+            }}
           >
             {joined?.length > 0 ? (
               <Button
@@ -98,7 +104,7 @@ const DetailedChallenge = () => {
                 variant="contained"
                 color="success"
                 onClick={() => {
-                  dispatch(joinChallenge(id))
+                  dispatch(joinChallenge(id));
                   Notification("You have joined the challenge", "success");
                 }}
               >
@@ -117,24 +123,49 @@ const DetailedChallenge = () => {
           >
             {challenge?.name}
           </Typography>
-          {challenge?.createdBy?._id === user?.user?._id && (
+          <Box
+            style={{
+              alignSelf: "flex-end",
+              padding: "0px 10px",
+              display: "flex",
+            }}
+          >
+            {challenge?.createdBy?._id === user?.user?._id && (
+              <IconButton
+                onClick={() => {
+                  setCreateFlag(true);
+                  toggleDrawer(true);
+                }}
+                style={{
+                  color: "white",
+                  alignSelf: "flex-end",
+                }}
+              >
+                <AddTaskIcon />
+              </IconButton>
+            )}
             <IconButton
-              onClick={() => toggleDrawer(true)}
+              onClick={() => {
+                setCreateFlag(false);
+                toggleDrawer(true);
+              }}
               style={{
                 color: "white",
-                alignSelf: "flex-end",
               }}
             >
-              <AddTaskIcon />
+              <LeaderboardIcon />
             </IconButton>
-          )}
-
+          </Box>
           <Drawer
             open={open}
             onClose={() => toggleDrawer(false)}
             anchor="right"
           >
-            <CreateTask id={id} toggleDrawer={toggleDrawer} />
+            {createFlag ? (
+              <CreateTask id={id} toggleDrawer={toggleDrawer} />
+            ) : (
+              <LeaderBoard />
+            )}
           </Drawer>
           <Box
             style={{
@@ -143,7 +174,7 @@ const DetailedChallenge = () => {
               flexDirection: "row",
               flexWrap: "wrap",
               gap: 10,
-              /*  border: "2px solid white", */
+              /* border: "2px solid white", */
               padding: "10px",
               alignItems: "flex-start",
               minWidth: "80%",
@@ -169,7 +200,7 @@ const DetailedChallenge = () => {
                 flexDirection: "column",
                 gap: 10,
                 flex: 1,
-                /* border: "1px solid red", */
+                /*  border: "1px solid red", */
                 alignItems: "center",
               }}
             >
@@ -179,6 +210,8 @@ const DetailedChallenge = () => {
                   flexDirection: "row",
                   gap: 10,
                   flexWrap: "wrap",
+                  alignSelf: "flex-start",
+                  padding: 10,
                 }}
               >
                 <Chip
@@ -256,9 +289,8 @@ const DetailedChallenge = () => {
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  /* border: "2px solid white", */
+                  /*  border: "2px solid white", */
                   width: "100%",
-                  padding: 10,
                 }}
               >
                 <Box
@@ -266,6 +298,9 @@ const DetailedChallenge = () => {
                     backgroundColor: "white",
                     borderRadius: "20px",
                     margin: "10px",
+                    flex: 1,
+
+                    height: "100%",
                   }}
                 >
                   <CustomTimeline
@@ -288,20 +323,24 @@ const DetailedChallenge = () => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    border: "1px solid white",
                     gap: 20,
                     flex: 1,
                     padding: 10,
-                    borderRadius: "20px",
-                    backgroundColor: "#f5f5f5",
                   }}
                 >
                   <Typography
                     variant="body1"
                     className={style.title}
-                    color="black"
+                    color="white"
+                    
                   >
-                    {challenge?.description}
+                    <Typist
+                      cursor={{ show: false }}
+                      startDelay={1000}
+                      avgTypingDelay={50}
+                    >
+                      {challenge?.description}
+                    </Typist>
                   </Typography>
 
                   <Typography
@@ -310,7 +349,7 @@ const DetailedChallenge = () => {
                     display="flex"
                     alignItems="center"
                     gap={1}
-                    color="black"
+                    color="white"
                   >
                     <EmojiEventsIcon />
                     {challenge?.reward}
@@ -321,7 +360,7 @@ const DetailedChallenge = () => {
                     display="flex"
                     alignItems="center"
                     gap={1}
-                    color="black"
+                    color="white"
                   >
                     <LocationSearchingIcon />
                     {challenge?.goal}
@@ -383,19 +422,29 @@ const DetailedChallenge = () => {
                       }}
                     >
                       <Checkbox
-                        checked={task.completed}
+                        checked={task.completed.includes(user?.user?._id)}
                         onClick={() => {
+                          Notification(
+                            `You have ${
+                              task.completed.includes(user?.user?._id)
+                                ? "uncompleted"
+                                : "completed"
+                            } the task: ${task.title}`,
+                            "success"
+                          );
                           dispatch(completeTask(task._id, id));
                           dispatch(
                             creditCoins(
-                              task.completed ? -task.coin : task.coin,
+                              task.completed.includes(user?.user?._id)
+                                ? -task.coin
+                                : task.coin,
                               user?.user?._id
                             )
                           );
                         }}
                       />
                       {task.title}
-                      {task.completed && (
+                      {task.completed.includes(user?.user?._id) && (
                         <Chip
                           label="Completed"
                           color="success"

@@ -27,10 +27,12 @@ const taskSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    completed: {
-      type: Boolean,
-      default: false,
-    },
+    completed: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );
