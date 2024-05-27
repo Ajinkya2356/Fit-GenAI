@@ -1,5 +1,5 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getGeneratedSteps,
@@ -10,9 +10,15 @@ import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import StepDetail from "./StepDetail";
 import { CircularProgress } from "@mui/material";
+import Notification from "../common/Notification";
 const CreateSteps = ({ name, id, toggleDrawer }) => {
-  const { generatedSteps, loading } = useSelector((state) => state.STEP);
+  const { generatedSteps, loading, error } = useSelector((state) => state.STEP);
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (error) {
+      Notification("Error Occured", "danger");
+    }
+  }, [error]);
   return (
     <Container
       style={{
@@ -109,6 +115,7 @@ const CreateSteps = ({ name, id, toggleDrawer }) => {
           }}
           onClick={() => {
             dispatch(getGeneratedSteps(name));
+            Notification("Steps Generated", "success");
           }}
         >
           Generate Steps
@@ -121,6 +128,7 @@ const CreateSteps = ({ name, id, toggleDrawer }) => {
           onClick={() => {
             dispatch(saveGeneratedSteps(generatedSteps, id));
             toggleDrawer(false)();
+            Notification("Steps Saved", "success");
           }}
         >
           Save

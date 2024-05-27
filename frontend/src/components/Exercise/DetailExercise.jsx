@@ -8,29 +8,33 @@ import Like from "./like";
 import { Carousel } from "react-responsive-carousel";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import BoltIcon from "@mui/icons-material/Bolt";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import AddIcon from "@mui/icons-material/Add";
 import StepDetail from "./StepDetail";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CircularProgress from "@mui/material/CircularProgress";
 import {
-  getGeneratedSteps,
+  deleteStep,
   getSteps,
   setCurrentStep,
   setStepStatus,
 } from "../../../Redux/stepDetail/stepDetailSlice";
 import styles from "./exercise.module.css";
 import CreateSteps from "./CreateSteps";
+import CreateManualStep from "./CreateManualStep";
+import EditIcon from "@mui/icons-material/Edit";
+import UpdateManualStep from "./UpdateManualStep";
+import DeleteIcon from "@mui/icons-material/Delete";
 const DetailExercise = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
-
+  const [drawer, setDrawer] = React.useState(false);
+  const [editingStep, setEditingStep] = React.useState(null);
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
   const { exercise } = useSelector((state) => state.EXERCISE);
-  const { steps, currentStep, currentVideo } = useSelector(
+  const { steps, currentStep, currentVideo, loading } = useSelector(
     (state) => state.STEP
   );
   const [step, setStep] = useState(
@@ -41,11 +45,11 @@ const DetailExercise = () => {
     dispatch(getSingleExercise(id));
     dispatch(getSteps(id));
   }, [dispatch, id]);
-
   useEffect(() => {
-    setStep(steps.find((step) => step.stepNo === currentStep));
+    if (steps.length > 0) {
+      setStep(steps.find((step) => step.stepNo === currentStep));
+    }
   }, [currentStep, steps]);
-  console.log("Current Step", step);
   return (
     <Container
       maxWidth={false}
@@ -112,10 +116,35 @@ const DetailExercise = () => {
       <Typography
         variant="h6"
         color="white"
-        style={{ margin: "15px", alignSelf: "flex-start" }}
+        style={{
+          margin: "15px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
       >
         {exercise?.description}
+        <div style={{ display: "inherit", gap: 10 }}>
+          <IconButton
+            style={{ backgroundColor: "white" }}
+            onClick={() => setDrawer(true)}
+          >
+            <AddIcon style={{ color: "black" }} />
+          </IconButton>
+          <Button
+            onClick={toggleDrawer(true)}
+            variant="contained"
+            style={{
+              alignSelf: "flex-end",
+            }}
+          >
+            Generate Steps with AI
+          </Button>
+        </div>
       </Typography>
+      <Drawer anchor="right" onClose={() => setDrawer(false)} open={drawer}>
+        <CreateManualStep setDrawer={setDrawer} id={id} />
+      </Drawer>
+
       <Box className={styles.boxContainer}>
         <div
           style={{
@@ -175,11 +204,15 @@ const DetailExercise = () => {
             display: "flex",
             flexDirection: "column",
             gap: 10,
+            overflow: "auto",
+            height: "80vh",
+            overflowX: "hidden",
+            scrollBehavior: "smooth",
+            scrollbarWidth: "thin",
+            scrollbarColor: "#888 #f1f1f1",
+            padding: 10,
           }}
         >
-          <Button onClick={toggleDrawer(true)} variant="contained">
-            Add Steps
-          </Button>
           <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
             <CreateSteps
               name={exercise?.name}
@@ -187,8 +220,14 @@ const DetailExercise = () => {
               toggleDrawer={toggleDrawer}
             />
           </Drawer>
-          {steps &&
-            steps.map((s, i) => {
+
+          {loading ? (
+            <Box>
+              <CircularProgress />
+            </Box>
+          ) : (
+            steps &&
+            steps?.map((s, i) => {
               return (
                 <div
                   key={i}
@@ -199,12 +238,15 @@ const DetailExercise = () => {
                     borderRadius: "20px",
                     padding: 5,
                     cursor: "pointer",
+                    backgroundColor: "white",
                   }}
                   onClick={() => {
                     dispatch(setCurrentStep(s.stepNo));
-                    dispatch(
-                      setStepStatus({ stepIndex: s.stepNo, status: !s.active })
-                    );
+                    if (!s.active) {
+                      dispatch(
+                        setStepStatus({ stepIndex: s.stepNo, status: true })
+                      );
+                    }
                   }}
                 >
                   <Typography
@@ -213,7 +255,7 @@ const DetailExercise = () => {
                       display: "flex",
                       justifyContent: "flex-start",
                       alignItems: "center",
-                      color: "white",
+                      color: "black",
                       gap: 20,
                     }}
                   >
@@ -221,22 +263,26 @@ const DetailExercise = () => {
                       src={exercise?.image_url[0]}
                       alt="exercise"
                       style={{
-                        width: "25%",
+                        width: "40%",
                         height: "100%",
                         borderRadius: "20px",
+                        objectFit: "cover",
+                        border: "1px solid black",
                       }}
                     />
+
                     <div
                       style={{
                         display: "flex",
                         flexDirection: "column",
                       }}
                     >
-                      {s.data.title}
+                      {s.data?.title}
                       <Box
                         style={{
                           display: "flex",
                           flexDirection: "row",
+                          flexWrap: "wrap",
                           gap: 10,
                         }}
                       >
@@ -249,7 +295,7 @@ const DetailExercise = () => {
                           }}
                         >
                           <AccessTimeFilledIcon />
-                          {s.data.time}
+                          {s.data?.time}
                         </div>
                         <div
                           style={{
@@ -259,10 +305,38 @@ const DetailExercise = () => {
                           }}
                         >
                           <BoltIcon />
-                          {s.data.calories} kcal
+                          {s.data?.calories} kcal
                         </div>
                       </Box>
                     </div>
+                    <Box>
+                      <IconButton
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setEditingStep(s);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          dispatch(deleteStep(s?.data?._id, id));
+                        }}
+                      >
+                        <DeleteIcon style={{ color: "red" }} />
+                      </IconButton>
+                    </Box>
+                    <Drawer
+                      anchor="right"
+                      onClose={() => setEditingStep(null)}
+                      open={editingStep !== null}
+                    >
+                      <UpdateManualStep
+                        setEditingStep={setEditingStep}
+                        data={editingStep?.data}
+                        id={id}
+                      />
+                    </Drawer>
                     {s?.progress == 1 ? (
                       <CheckCircleIcon
                         style={{
@@ -284,14 +358,15 @@ const DetailExercise = () => {
                   </Typography>
                 </div>
               );
-            })}
+            })
+          )}
         </div>
       </Box>
       <Box>
-        {step && step.active && (
+        {step && step?.active && (
           <StepDetail
             currentStep={step}
-            combineSteps={step.data.steps}
+            combineSteps={step?.data?.steps}
             color={"white"}
           />
         )}

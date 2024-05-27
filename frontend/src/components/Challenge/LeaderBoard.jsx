@@ -1,17 +1,17 @@
 import { CircularProgress, Container, Typography, Box } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { leaderBoard } from "../../../Redux/challenge/challengeSlice";
+import { challengeLeaderBoard } from "../../../Redux/challenge/challengeSlice";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
-const LeaderBoard = () => {
+const LeaderBoard = ({ id }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.USER);
   useEffect(() => {
-    dispatch(leaderBoard());
+    dispatch(challengeLeaderBoard(id));
 
     const intervalId = setInterval(() => {
-      dispatch(leaderBoard());
+      dispatch(challengeLeaderBoard(id));
     }, 5 * 60 * 1000);
 
     return () => clearInterval(intervalId);
@@ -26,7 +26,8 @@ const LeaderBoard = () => {
         minWidth: 300,
         maxWidth: 400,
         backgroundColor: "#333",
-        height: "auto",
+        width: "100%",
+        height: "100%",
       }}
     >
       {leadLoading ? (

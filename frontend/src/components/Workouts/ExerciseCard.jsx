@@ -27,14 +27,16 @@ const ExerciseCard = ({ exercise, ind, workoutId }) => {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
+       /*  border: "2px solid white", */
       }}
     >
       <div
         style={{
           display: "flex",
           flexDirection: "row",
-          /* flexWrap:"wrap", */
+          minWidth: "50%",
           gap: "5%",
+          justifyContent: "space-between",
         }}
       >
         <Typography
@@ -47,6 +49,7 @@ const ExerciseCard = ({ exercise, ind, workoutId }) => {
             display: "flex",
             flexDirection: "column",
             gap: "10px",
+            width: "30%",
           }}
         >
           <div

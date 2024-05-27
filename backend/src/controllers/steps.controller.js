@@ -114,7 +114,44 @@ const saveSteps = AsyncHandler(async (req, res) => {
       steps: step.steps,
     });
   }
-  return;
-  res.status(201).json(new ApiResponse(201, {}, "Steps saved successfully"));
+  return res
+    .status(201)
+    .json(new ApiResponse(201, {}, "Steps saved successfully"));
 });
-export { createStep, getSteps, generateSteps, saveSteps };
+const updateStep = AsyncHandler(async (req, res) => {
+  try {
+    const { step } = req.body;
+    console.log(step);
+    const updatedStep = await Step.findByIdAndUpdate(
+      step._id,
+      {
+        title: step.title,
+        calories: step.calories,
+        time: step.time,
+        exerciseID: step.exerciseID,
+        steps: step.steps,
+      },
+      { new: true }
+    );
+    if (!updatedStep) {
+      throw new apiError(404, "Step not found");
+    }
+    return res
+      .status(200)
+      .json(new ApiResponse(200, updatedStep, "Step updated successfully"));
+  } catch (error) {
+    throw new apiError(400, error.message);
+  }
+});
+const deleteStep = AsyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const step = await Step.findByIdAndDelete(id);
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Step Deleted Successfully"));
+  } catch (error) {
+    throw new apiError(400, error.message);
+  }
+});
+export { createStep, getSteps, generateSteps, saveSteps, updateStep,deleteStep };

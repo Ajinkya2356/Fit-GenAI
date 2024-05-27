@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCategories } from "../../../Redux/category/categorySlice";
 import { createExercise } from "../../../Redux/exercise/exerciseSlice";
 import { useNavigate } from "react-router-dom";
-const AddExercise = () => {
+const AddExercise = ({ setOpen }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [fileName, setFileName] = useState("");
@@ -38,9 +38,10 @@ const AddExercise = () => {
   const { categories } = useSelector((state) => state.CATEGORY);
   return (
     <Container
-      maxWidth={false}
       style={{
-        backgroundColor: "#333",
+        maxWidth: 500,
+        minWidth: 300,
+        padding: 20,
       }}
     >
       <Typography variant="h6">Add Exercise</Typography>
@@ -58,12 +59,12 @@ const AddExercise = () => {
                       fullWidth
                       InputProps={{
                         style: {
-                          color: "white",
+                          color: "black",
                         },
                       }}
                       InputLabelProps={{
                         style: {
-                          color: "white",
+                          color: "black",
                         },
                       }}
                       onChange={(e) => {
@@ -152,6 +153,7 @@ const AddExercise = () => {
             onClick={() => {
               dispatch(createExercise(exercise));
               navigate(`/exercises`);
+              setOpen(false);
             }}
           >
             Add Exercise

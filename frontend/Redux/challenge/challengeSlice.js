@@ -347,8 +347,38 @@ export const leaderBoard = () => async (dispatch) => {
     );
     dispatch(getLeaderSuccess(data.data));
   } catch (error) {
-    globalErrorCatch(
-      e.response.data.message ? e.response.data.message : e.message
+    dispatch(
+      globalErrorCatch(
+        e.response.data.message ? e.response.data.message : e.message
+      )
+    );
+  }
+};
+export const challengeLeaderBoard = (id) => async (dispatch) => {
+  try {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      return;
+    }
+    dispatch(getLeaderReq());
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    };
+    const { data } = await axios.get(
+      `http://localhost:8000/api/v1/users/leaderBoard/${id}`,
+      config
+    );
+    console.log(data.data);
+    dispatch(getLeaderSuccess(data.data));
+  } catch (error) {
+    dispatch(
+      globalErrorCatch(
+        e.response.data.message ? e.response.data.message : e.message
+      )
     );
   }
 };

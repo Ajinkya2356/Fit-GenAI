@@ -244,6 +244,7 @@ export const createWorkout = (workoutData) => async (dispatch) => {
       config
     );
     dispatch(createWorkoutSuccess());
+    dispatch(workoutAction());
   } catch (error) {
     if (error.response && error.response.data) {
       dispatch(globalErrorCatch(error.response.data.message));

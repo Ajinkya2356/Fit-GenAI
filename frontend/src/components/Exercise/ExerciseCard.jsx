@@ -19,7 +19,11 @@ const ExerciseCard = ({ item }) => {
   const { loading } = useSelector((state) => state.WORKOUT);
   const navigate = useNavigate();
   useEffect(() => {}, [item]);
-
+  const colorMap = {
+    beginner: "green",
+    intermediate: "orange",
+    advanced: "red",
+  };
   return (
     <>
       {loading ? (
@@ -44,24 +48,32 @@ const ExerciseCard = ({ item }) => {
             flexDirection: "column",
           }}
         >
-          <Chip
-            label={item?.difficulty_level.toUpperCase()}
+          <Box
             style={{
-              alignSelf: "flex-end",
-              marginTop: "5%",
-              marginRight: "2%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "0 2%",
             }}
-          />
-          <CardHeader
-            title={item?.name}
-            subheader={FormalDate(item?.createdAt)}
-            onClick={() =>
-              navigate(`/exercise/${item?._id}`, {
-                state: item,
-              })
-            }
-          ></CardHeader>
-
+          >
+            <CardHeader
+              title={item?.name}
+              textoverflow="ellipsis"
+              subheader={FormalDate(item?.createdAt)}
+              onClick={() =>
+                navigate(`/exercise/${item?._id}`, {
+                  state: item,
+                })
+              }
+            ></CardHeader>
+            <Chip
+              label={item?.difficulty_level.toUpperCase()}
+              style={{
+                backgroundColor: colorMap[item?.difficulty_level.toLowerCase()],
+                color: "white",
+              }}
+            />
+          </Box>
           <CardMedia
             sx={{
               display: "flex",

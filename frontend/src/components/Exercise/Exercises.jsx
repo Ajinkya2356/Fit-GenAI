@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Box, TextField } from "@mui/material";
+import { Container, Box, TextField, Drawer } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getExerciseAction } from "../../../Redux/exercise/exerciseSlice";
 import SearchIcon from "@mui/icons-material/Search";
@@ -11,7 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { Button } from "@mui/material";
-
+import AddExercise from "./AddExercise";
 const Exercises = () => {
   const dispatch = useDispatch();
   const { exercises, error, loading } = useSelector((state) => state.EXERCISE);
@@ -25,7 +25,7 @@ const Exercises = () => {
     return () => clearTimeout(getData);
   }, [dispatch, searchKey, difficulty]);
 
-  /*   console.log(exercises); */
+  const [open, setOpen] = useState(false);
   return (
     <Container
       maxWidth={false}
@@ -100,7 +100,7 @@ const Exercises = () => {
               autoWidth
               label="Difficulty"
               style={{
-                borderColor: "white",
+                border: "1px solid white",
               }}
             >
               <MenuItem value={"Begineer"}>Begineer</MenuItem>
@@ -109,7 +109,7 @@ const Exercises = () => {
             </Select>
           </FormControl>
           <Button
-            variant="outlined"
+            variant="contained"
             sx={{
               m: 1,
             }}
@@ -120,14 +120,17 @@ const Exercises = () => {
           >
             Clear
           </Button>
-          <Button>
-            <a
-              href="/addexercise"
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              Add Exercise
-            </a>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Add Exercise
           </Button>
+          <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+            <AddExercise setOpen={setOpen} />
+          </Drawer>
         </Box>
       </Box>
       <Box style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
@@ -142,7 +145,7 @@ const Exercises = () => {
             <CircularProgress />
           </Box>
         ) : (
-          exercises.map((item, index) => {
+          exercises?.map((item, index) => {
             return <ExerciseCard item={item} key={index} />;
           })
         )}

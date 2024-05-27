@@ -15,6 +15,7 @@ import {
   getMultipleUsers,
   addCoins,
   getLeaderBoard,
+  getChallengeLeaderBoard,
 } from "../controllers/user.controller.js";
 import { upload } from "../Middlewares/multer.middleware.js";
 import { verifyJWT } from "../Middlewares/auth.middleware.js";
@@ -44,4 +45,5 @@ router.route("/user/:id").get(verifyJWT, getSingleUser);
 router.route("/getUsers").post(verifyJWT, getMultipleUsers);
 router.route("/addCoins").post(verifyJWT, addCoins);
 router.route("/leaderBoard").get(verifyJWT, getLeaderBoard);
+router.route("/leaderBoard/:id").get(verifyJWT,getChallengeLeaderBoard);
 export default router;

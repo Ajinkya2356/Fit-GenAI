@@ -7,6 +7,7 @@ import { sendEmail } from "../utils/sendEmail.js";
 import jwt from "jsonwebtoken";
 import zod from "zod";
 import { Challenge } from "../Models/challenge.model.js";
+import mongoose from "mongoose";
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
@@ -474,8 +475,13 @@ const getChallengeLeaderBoard = AsyncHandler(async (req, res) => {
     const { id } = req.params;
     let users = await Challenge.aggregate([
       {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id),
+        },
+      },
+      {
         $lookup: {
-          from: "User",
+          from: "users",
           localField: "participants",
           foreignField: "_id",
           pipeline: [
@@ -501,43 +507,29 @@ const getChallengeLeaderBoard = AsyncHandler(async (req, res) => {
       },
       {
         $project: {
-          users: "$users",
+          _id: 0,
+          users: 1,
         },
       },
     ]);
-
-    users = users.map((user, index) => ({
+    if (!users || users.length === 0) {
+      throw new apiError(404, "No users found");
+    }
+    users = users[0].users.map((user, index) => ({
       ...user,
       rank: index + 1,
     }));
-
-    const check = users.some(
-      (user) => user._id.toString() === req.user._id.toString()
-    );
-    const isMember=await Challenge.findById(id)
-    if (!check) {
-      const currentUser = await User.findById(req.user._id).select(
-        "_id username avatar coinBalance"
-      );
-      const currentUserRank =
-        (await User.countDocuments({
-          coinBalance: { $gt: currentUser.coinBalance },
-        })) + 1;
-      users = users.slice(0, 9);
-      users.push({
-        _id: currentUser._id,
-        username: currentUser.username,
-        avatar: currentUser.avatar,
-        coinBalance: currentUser.coinBalance,
-        rank: currentUserRank,
-      });
-      users.sort((a, b) => b.coinBalance - a.coinBalance);
-    }
-
     return res
       .status(200)
-      .json(new ApiResponse(200, users, "LeaderBoard Fetched Successfully"));
+      .json(
+        new ApiResponse(
+          200,
+          users,
+          "Challenge LeaderBoard Fetched Successfully"
+        )
+      );
   } catch (error) {
+    console.log(error);
     throw new apiError(404, error.message);
   }
 });
@@ -557,4 +549,5 @@ export {
   getMultipleUsers,
   addCoins,
   getLeaderBoard,
+  getChallengeLeaderBoard,
 };

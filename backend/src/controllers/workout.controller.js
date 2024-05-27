@@ -46,7 +46,7 @@ const createWorkout = AsyncHandler(async (req, res) => {
   if (!planExists) {
     throw new apiError(404, "Plan not found");
   }
-  const workout_duration = endTime.getHours() - startTime.getHours();
+  const workout_duration = endTime.getDay() - startTime.getDay();
   const coverImageLocalPath = req.file.path;
   if (!coverImageLocalPath) {
     throw new apiError(400, "Cover Image is required");

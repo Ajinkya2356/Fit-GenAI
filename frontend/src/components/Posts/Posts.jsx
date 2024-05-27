@@ -10,6 +10,8 @@ import {
   IconButton,
   Drawer,
   CircularProgress,
+  Button,
+  Typography,
 } from "@mui/material";
 import ArrowCircleLeftIcon from "@mui/icons-material/ArrowCircleLeft";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
@@ -43,84 +45,17 @@ const Posts = () => {
     >
       <Box
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexDirection: "row",
-          flexWrap: "wrap",
+          alignSelf: "flex-end",
+          margin: "20px 0",
         }}
       >
-        <Box
-          style={{
-            display: "flex",
-            alignSelf: "flex-start",
-            margin: "20px",
-            width: "60%",
-          }}
-        >
-          <TextField
-            fullWidth
-            variant="standard"
-            label="Search"
-            value={keyword}
-            InputLabelProps={{
-              style: {
-                color: "#fff",
-              },
-            }}
-            InputProps={{
-              style: {
-                color: "#fff",
-                borderBottom: "1px solid white",
-              },
-            }}
-            onChange={(e) => setKeyword(e.target.value)}
-          />
-        </Box>
-        <Box
-          style={{
-            margin: "20px",
-            padding: "10px",
-            flex: 1,
-          }}
-        >
-          <FormControl>
-            <InputLabel
-              style={{
-                color: "white",
-              }}
-            >
-              Sort By
-            </InputLabel>
-            <Select
-              onChange={(e) => {
-                if (e.target.value === "ascending") {
-                  setAscending(true);
-                  setDescending(false);
-                } else if (e.target.value === "descending") {
-                  setDescending(true);
-                  setAscending(false);
-                }
-              }}
-              style={{
-                color: "white",
-                border: "1px solid white",
-                minWidth: "120px",
-              }}
-            >
-              <MenuItem value="descending">Recently Added</MenuItem>
-              <MenuItem value="ascending">Reset</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-        <IconButton onClick={handleDrawerClick}>
-          <PostAddIcon style={{ color: "white" }} />
-        </IconButton>
-        <Drawer onClose={handleDrawerClick} open={drawer} anchor="right">
-          <CreatePost setDrawer={setDrawer} />
-        </Drawer>
+        <Button onClick={handleDrawerClick} variant="contained">
+          <Typography>Create Post</Typography>
+        </Button>
       </Box>
-
+      <Drawer onClose={handleDrawerClick} open={drawer} anchor="right">
+        <CreatePost setDrawer={setDrawer} />
+      </Drawer>
       {loading ? (
         <Box>
           <CircularProgress />
@@ -132,7 +67,7 @@ const Posts = () => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
-            gap: 10,
+            gap: 1,
             margin: "20px 0",
           }}
         >

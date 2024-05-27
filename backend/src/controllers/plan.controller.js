@@ -173,6 +173,7 @@ const generatePlan = AsyncHandler(async (req, res) => {
 });
 const savePlan = AsyncHandler(async (req, res) => {
   const { name, exercises } = req.body;
+  console.log(req.body);
   const newPlan = await Plan.create({
     name,
     exercises,
@@ -191,5 +192,5 @@ export {
   getPlan,
   getMultiplePlans,
   generatePlan,
-  savePlan
+  savePlan,
 };

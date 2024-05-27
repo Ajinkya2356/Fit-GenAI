@@ -164,7 +164,7 @@ const DetailedChallenge = () => {
             {createFlag ? (
               <CreateTask id={id} toggleDrawer={toggleDrawer} />
             ) : (
-              <LeaderBoard />
+              <LeaderBoard id={id} />
             )}
           </Drawer>
           <Box
@@ -332,7 +332,6 @@ const DetailedChallenge = () => {
                     variant="body1"
                     className={style.title}
                     color="white"
-                    
                   >
                     <Typist
                       cursor={{ show: false }}

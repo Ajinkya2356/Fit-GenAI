@@ -214,7 +214,6 @@ const PlanDrawer = ({ toggleSecond }) => {
                 const newExercises = generatedPlan.exercises.map((e) => {
                   return { ...e, exercise: getExerciseID(e.exercise) };
                 });
-                console.log(newExercises);
                 dispatch(saveAction(generatedPlan.name, newExercises));
                 toggleSecond(false)();
                 Notification("Plan Saved", "success");
@@ -231,7 +230,7 @@ const PlanDrawer = ({ toggleSecond }) => {
                 const exerciseNames = exercises.map((e) => e.name);
                 dispatch(generatePlan(planName, exerciseNames));
                 setFlag(true);
-                Notification("Plan Generated", "success");
+                if (!loading) Notification("Plan Generated", "success");
               }}
               style={{
                 backgroundColor: "white",
