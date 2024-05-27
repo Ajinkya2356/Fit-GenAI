@@ -220,6 +220,7 @@ export const getSinglePost = (postId) => async (dispatch) => {
       `http://localhost:8000/api/v1/post/${postId}`,
       config
     );
+    console.log(response.data.data);
     dispatch(getPostSuccess(response.data.data));
   } catch (error) {
     dispatch(catchError(error.response.data.message));

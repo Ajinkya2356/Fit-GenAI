@@ -64,7 +64,7 @@ export default function PostCard({ post }) {
   const disliked = post?.dislikes?.includes(user?.user?._id);
 
   return (
-    <Card sx={{ width: 345 }}>
+    <Card sx={{ width: 345, height: "auto" }}>
       <CardHeader
         avatar={
           <Avatar
@@ -220,9 +220,10 @@ export default function PostCard({ post }) {
             </Box>
           )}
 
-          {postComments.map((comment) => {
+          {postComments.map((comment,index) => {
             return (
               <Box
+                key={index}
                 style={{
                   border: "1px solid gray",
                   display: "flex",
