@@ -16,7 +16,7 @@ const Testimonials = () => {
     dispatch(commentAction());
   }, []);
   const { comments } = useSelector((state) => state.COMMENT);
-  console.log(comments);
+  /* console.log(comments); */
   return (
     <>
       <Box

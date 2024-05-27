@@ -17,7 +17,7 @@ const Feature = () => {
     dispatch(getChallengeAction("", ""));
   }, []);
   const { challenges, loading } = useSelector((state) => state.CHALLENGE);
-  console.log("Challenge", challenges);
+ /*  console.log("Challenge", challenges); */
   return (
     <>
       <Container>

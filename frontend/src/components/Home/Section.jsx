@@ -15,7 +15,7 @@ const Section = () => {
     dispatch(getExerciseAction("", ""));
   }, []);
   const { exercises } = useSelector((state) => state.EXERCISE);
-  console.log(exercises);
+ /*  console.log(exercises); */
   return (
     <div
       style={{

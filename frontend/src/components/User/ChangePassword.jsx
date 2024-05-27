@@ -19,11 +19,13 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import styles from "./register.module.css";
 import { useNavigate } from "react-router-dom";
+import Notification from "../common/Notification";
 const ChangePassword = () => {
   const fields = ["Old Password", "New Password"];
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const navigate = useNavigate();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -37,13 +39,13 @@ const ChangePassword = () => {
   };
   useEffect(() => {
     if (error) {
-      setVisible(true);
+      Notification(error.message, "danger");
     }
     if (isAuthenticated == false) {
       navigate("/");
     }
   }, [dispatch, isAuthenticated, error]);
-  
+
   return (
     <>
       <Container maxWidth="sm" className={styles.outer}>
@@ -68,15 +70,37 @@ const ChangePassword = () => {
                     : setOldPassword(e.target.value)
                 }
                 value={isPasswordField ? newPassword : oldPassword}
-                type={showPassword ? "password" : "text"}
+                type={
+                  isPasswordField
+                    ? showNewPassword
+                      ? "text"
+                      : "password"
+                    : showOldPassword
+                    ? "text"
+                    : "password"
+                }
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
+                        onClick={() =>
+                          isPasswordField
+                            ? setShowNewPassword(!showNewPassword)
+                            : setShowOldPassword(!showOldPassword)
+                        }
                         edge="end"
                       >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                        {isPasswordField ? (
+                          showNewPassword ? (
+                            <Visibility />
+                          ) : (
+                            <VisibilityOff />
+                          )
+                        ) : showOldPassword ? (
+                          <Visibility />
+                        ) : (
+                          <VisibilityOff />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -89,7 +113,10 @@ const ChangePassword = () => {
         <div>
           <Button
             variant="contained"
-            onClick={() => handleSubmit(newPassword, oldPassword)}
+            onClick={() => {
+              handleSubmit(newPassword, oldPassword);
+              Notification("Password Changed successfully", "success");
+            }}
             sx={{ margin: "10px" }}
           >
             {defaultValues.changePasswordTitle}

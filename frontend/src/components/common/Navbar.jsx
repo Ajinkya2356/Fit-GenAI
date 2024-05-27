@@ -25,7 +25,7 @@ const userProfile = [
   "Change Password",
   "My Exercises",
   "My Challenges",
-  "My Collections",
+
   "Logout",
 ];
 const mappingToLinks = {

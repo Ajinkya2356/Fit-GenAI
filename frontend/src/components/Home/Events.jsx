@@ -26,7 +26,7 @@ const Events = () => {
     dispatch(workoutAction());
   }, []);
   const { workouts } = useSelector((state) => state.WORKOUT);
-  console.log("Workouts", workouts);
+ /*  console.log("Workouts", workouts); */
   return (
     <>
       <Box flex="1" bgcolor="#f5f5f5" padding="1%" borderRadius="20px">
