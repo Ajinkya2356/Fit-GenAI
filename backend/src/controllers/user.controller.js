@@ -27,7 +27,7 @@ const registerBody = zod.object({
   username: zod.string(),
   email: zod.string().email(),
   name: zod.string(),
-  password: zod.string(),
+  password: zod.string().min(6),
 });
 const loginBody = zod.object({
   username: zod.string().optional(),
@@ -529,7 +529,6 @@ const getChallengeLeaderBoard = AsyncHandler(async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
     throw new apiError(404, error.message);
   }
 });

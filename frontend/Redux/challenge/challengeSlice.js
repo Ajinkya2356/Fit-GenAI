@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { globalErrorCatch } from "../workout/workoutSlice";
 import { loadUser } from "../user/userSlice";
 export const getChallengeAction = (keyword, status) => async (dispatch) => {
   try {
@@ -17,11 +16,7 @@ export const getChallengeAction = (keyword, status) => async (dispatch) => {
 
     dispatch(getChallengesSuccess(response.data.data));
   } catch (e) {
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const getSingleChallenge = (id) => async (dispatch) => {
@@ -32,9 +27,7 @@ export const getSingleChallenge = (id) => async (dispatch) => {
     );
     dispatch(getSingleChallengeSuccess(challenge.data.data));
   } catch (e) {
-    globalErrorCatch(
-      e.response.data.message ? e.response.data.message : e.message
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const joinChallenge = (id) => async (dispatch) => {
@@ -55,9 +48,8 @@ export const joinChallenge = (id) => async (dispatch) => {
     );
     dispatch(getSingleChallenge(id));
   } catch (e) {
-    globalErrorCatch(
-      e.response.data.message ? e.response.data.message : e.message
-    );
+    console.log(e);
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const leaveChallenge = (id) => async (dispatch) => {
@@ -78,10 +70,7 @@ export const leaveChallenge = (id) => async (dispatch) => {
     );
     dispatch(getSingleChallenge(id));
   } catch (e) {
-    console.log(e);
-    globalErrorCatch(
-      e.response.data.message ? e.response.data.message : e.message
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const createChallenge = (challengeData) => async (dispatch) => {
@@ -110,9 +99,7 @@ export const createChallenge = (challengeData) => async (dispatch) => {
     );
     console.log(response);
   } catch (e) {
-    globalErrorCatch(
-      e.response.data.message ? e.response.data.message : e.message
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const getUserChallenges = () => async (dispatch) => {
@@ -133,11 +120,7 @@ export const getUserChallenges = () => async (dispatch) => {
     );
     dispatch(getUserChallengeSuccess(data.data));
   } catch (e) {
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const deleteChallenge = (challengeId) => async (dispatch) => {
@@ -157,11 +140,7 @@ export const deleteChallenge = (challengeId) => async (dispatch) => {
     );
     dispatch(getUserChallenges());
   } catch (e) {
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const updateChallenge = (challengeData, id) => async (dispatch) => {
@@ -186,11 +165,7 @@ export const updateChallenge = (challengeData, id) => async (dispatch) => {
     );
     dispatch(getUserChallenges());
   } catch (e) {
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const createTask = (taskData) => async (dispatch) => {
@@ -214,11 +189,7 @@ export const createTask = (taskData) => async (dispatch) => {
     dispatch(createTaskSuccess());
     dispatch(getChallengeTask(taskData.challenge));
   } catch (e) {
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const getChallengeTask = (challengeId) => async (dispatch) => {
@@ -240,12 +211,7 @@ export const getChallengeTask = (challengeId) => async (dispatch) => {
     dispatch(getTaskSucc(response.data.data));
     dispatch(getSingleChallenge(challengeId));
   } catch (e) {
-    console.log(e);
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const completeTask = (taskId, id) => async (dispatch) => {
@@ -267,12 +233,7 @@ export const completeTask = (taskId, id) => async (dispatch) => {
     dispatch(createTaskSuccess());
     dispatch(getChallengeTask(id));
   } catch (e) {
-    console.log(e);
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const getTask = (taskId) => async (dispatch) => {
@@ -293,12 +254,7 @@ export const getTask = (taskId) => async (dispatch) => {
     );
     dispatch(setSingleTaskSuccess(response.data.data));
   } catch (e) {
-    console.log(e);
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const creditCoins = (coins, userId) => async (dispatch) => {
@@ -319,12 +275,7 @@ export const creditCoins = (coins, userId) => async (dispatch) => {
     );
     dispatch(loadUser());
   } catch (e) {
-    console.log(e);
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const leaderBoard = () => async (dispatch) => {
@@ -347,11 +298,7 @@ export const leaderBoard = () => async (dispatch) => {
     );
     dispatch(getLeaderSuccess(data.data));
   } catch (error) {
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 export const challengeLeaderBoard = (id) => async (dispatch) => {
@@ -372,14 +319,9 @@ export const challengeLeaderBoard = (id) => async (dispatch) => {
       `http://localhost:8000/api/v1/users/leaderBoard/${id}`,
       config
     );
-    console.log(data.data);
     dispatch(getLeaderSuccess(data.data));
   } catch (error) {
-    dispatch(
-      globalErrorCatch(
-        e.response.data.message ? e.response.data.message : e.message
-      )
-    );
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
 const challengeSlice = createSlice({
@@ -417,7 +359,7 @@ const challengeSlice = createSlice({
     getUserChallengeSuccess(state, action) {
       state.loading = false;
       state.userChallenges = action.payload;
-    },
+    },  
     createTaskRequest(state, action) {
       state.loading = true;
     },
@@ -445,6 +387,12 @@ const challengeSlice = createSlice({
       state.leadLoading = false;
       state.userLeaderBoard = action.payload;
     },
+    globalErrorCatch: (state, action) => {
+      state.error = action.payload;
+    },
+    clearErrors: (state) => {
+      state.error = null;
+    },
   },
 });
 export const {
@@ -464,5 +412,7 @@ export const {
   setSingleTaskSuccess,
   getLeaderReq,
   getLeaderSuccess,
+  globalErrorCatch,
+  clearErrors,
 } = challengeSlice.actions;
 export default challengeSlice.reducer;

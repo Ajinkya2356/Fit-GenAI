@@ -14,6 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Create from "./Create";
+import Notification from "../common/Notification";
 export const colorToStatusMap = {
   upcoming: "#325ea8",
   live: "green",
@@ -31,7 +32,14 @@ const Challenges = () => {
     }, 1000);
     return () => clearTimeout(getData);
   }, [dispatch, keyword, status]);
-  const { challenges, loading } = useSelector((state) => state.CHALLENGE);
+  const { challenges, loading, error } = useSelector(
+    (state) => state.CHALLENGE
+  );
+  useEffect(() => {
+    if (error) {
+      Notification(error, "danger");
+    }
+  }, [error]);
   return (
     <>
       <Container
@@ -87,7 +95,6 @@ const Challenges = () => {
               <IconButton
                 onClick={() => {
                   setOpen(true);
-                  
                 }}
                 sx={{ backgroundColor: "#4caf50" }}
               >

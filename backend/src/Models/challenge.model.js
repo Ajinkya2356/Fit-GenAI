@@ -62,4 +62,19 @@ const challenge = new mongoose.Schema(
   },
   { timestamps: true }
 );
+challenge.pre("aggregate", function () {
+  this.pipeline().unshift({
+    $addFields: {
+      status: {
+        $cond: [
+          { $gt: ["$startDate", new Date()] },
+          "Upcoming",
+          {
+            $cond: [{ $lt: ["$endDate", new Date()] }, "Expired", "Live"],
+          },
+        ],
+      },
+    },
+  });
+});
 export const Challenge = mongoose.model("Challenge", challenge);

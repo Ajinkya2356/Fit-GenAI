@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearErrors,
   completeTask,
   creditCoins,
   getChallengeTask,
@@ -50,17 +51,26 @@ const DetailedChallenge = () => {
     dispatch(getChallengeTask(id));
   }, [dispatch]);
   const [createFlag, setCreateFlag] = useState(false);
-  const { challenge, loading, Task } = useSelector((state) => state.CHALLENGE);
+  const { challenge, loading, Task, error } = useSelector(
+    (state) => state.CHALLENGE
+  );
   const { user } = useSelector((state) => state.USER);
   const [open, setOpen] = useState(false);
   const [details, setDetails] = useState(Array(Task?.length).fill(false));
   const toggleDrawer = (open) => {
     setOpen(open);
   };
+
   const joined = challenge?.participants?.filter((p) => {
     return p._id === user?.user?._id;
   });
   useEffect(() => {}, [Task]);
+  useEffect(() => {
+    if (error) {
+      Notification(error, "danger");
+      dispatch(clearErrors());
+    }
+  }, [error]);
   return (
     <Container
       maxWidth={false}
@@ -162,7 +172,11 @@ const DetailedChallenge = () => {
             anchor="right"
           >
             {createFlag ? (
-              <CreateTask id={id} toggleDrawer={toggleDrawer} />
+              <CreateTask
+                id={id}
+                toggleDrawer={toggleDrawer}
+                status={challenge?.status}
+              />
             ) : (
               <LeaderBoard id={id} />
             )}
@@ -441,6 +455,7 @@ const DetailedChallenge = () => {
                             )
                           );
                         }}
+                        disabled={challenge?.status === "Expired" || "Upcoming"}
                       />
                       {task.title}
                       {task.completed.includes(user?.user?._id) && (

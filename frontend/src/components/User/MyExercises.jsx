@@ -17,8 +17,6 @@ const MyExercises = () => {
     dispatch(userExercise());
   }, []);
   const { userExercises, loading } = useSelector((state) => state.EXERCISE);
-
-  console.log("Exercise", userExercises);
   return (
     <Container
       maxWidth={false}
@@ -28,95 +26,103 @@ const MyExercises = () => {
         padding: "20px",
       }}
     >
-      {userExercises.map((exercise, index) => {
-        return loading ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              height: "100%",
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        ) : (
-          <Box
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              color: "white",
-            }}
-          >
-            <div
+      {userExercises.length == 0 ? (
+        <Box style={{ display: "flex", flex: 1 }}>
+          <Typography variant="h3" color="white">
+            No Exercises Found
+          </Typography>
+        </Box>
+      ) : (
+        userExercises.map((exercise, index) => {
+          return loading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Box
               style={{
                 display: "flex",
+                flexDirection: "column",
                 justifyContent: "space-between",
-                flexDirection: "row",
-                boxShadow: "0 0 10px #fff, 0 0 5px #fff",
-                padding: 5,
-                margin: 10,
-                borderRadius: "20px",
-                gap: 20,
-                cursor: "pointer",
+                color: "white",
               }}
             >
               <div
                 style={{
-                  /*     border: "2px solid red", */
                   display: "flex",
+                  justifyContent: "space-between",
                   flexDirection: "row",
-                  alignItems: "center",
+                  boxShadow: "0 0 10px #fff, 0 0 5px #fff",
+                  padding: 5,
+                  margin: 10,
+                  borderRadius: "20px",
                   gap: 20,
-                }}
-                onClick={() => {
-                  navigate(`/exercise/${exercise._id}`);
+                  cursor: "pointer",
                 }}
               >
-                <img
-                  src={exercise.image_url}
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    objectFit: "cover",
-                    borderRadius: "20%",
-                  }}
-                />
                 <div
-                  style={
-                    {
-                      /* border: "2px solid red", */
-                    }
-                  }
+                  style={{
+                    /*     border: "2px solid red", */
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 20,
+                  }}
+                  onClick={() => {
+                    navigate(`/exercise/${exercise._id}`);
+                  }}
                 >
-                  <Typography variant="h6">{exercise.name}</Typography>
-                  <Typography variant="body1">
-                    {exercise.description}
-                  </Typography>
+                  <img
+                    src={exercise.image_url}
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      objectFit: "cover",
+                      borderRadius: "20%",
+                    }}
+                  />
+                  <div
+                    style={
+                      {
+                        /* border: "2px solid red", */
+                      }
+                    }
+                  >
+                    <Typography variant="h6">{exercise.name}</Typography>
+                    <Typography variant="body1">
+                      {exercise.description}
+                    </Typography>
+                  </div>
+                </div>
+                <div>
+                  <IconButton
+                    onClick={() => {
+                      navigate(`/exercise/update/${exercise._id}`);
+                    }}
+                  >
+                    <EditIcon style={{ color: "white" }} />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      dispatch(deleteExercise(exercise?._id));
+                    }}
+                  >
+                    <DeleteIcon style={{ color: "red" }} />
+                  </IconButton>
                 </div>
               </div>
-              <div>
-                <IconButton
-                  onClick={() => {
-                    navigate(`/exercise/update/${exercise._id}`);
-                  }}
-                >
-                  <EditIcon style={{ color: "white" }} />
-                </IconButton>
-                <IconButton
-                  onClick={() => {
-                    dispatch(deleteExercise(exercise?._id));
-                  }}
-                >
-                  <DeleteIcon style={{ color: "red" }} />
-                </IconButton>
-              </div>
-            </div>
-          </Box>
-        );
-      })}
+            </Box>
+          );
+        })
+      )}
     </Container>
   );
 };

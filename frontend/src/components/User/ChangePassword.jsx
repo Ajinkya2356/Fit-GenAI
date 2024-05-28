@@ -40,6 +40,7 @@ const ChangePassword = () => {
   useEffect(() => {
     if (error) {
       Notification(error.message, "danger");
+      dispatch(clearErrors());
     }
     if (isAuthenticated == false) {
       navigate("/");
@@ -122,29 +123,6 @@ const ChangePassword = () => {
             {defaultValues.changePasswordTitle}
           </Button>
         </div>
-        <Snackbar
-          open={visible}
-          autoHideDuration={4000}
-          TransitionComponent={Slide}
-        >
-          {error ? (
-            <Alert
-              severity="error"
-              sx={{ width: "100%", display: "flex", alignItems: "center" }}
-            >
-              {error}
-              <Button
-                sx={{ alignSelf: "flex-end" }}
-                onClick={() => {
-                  dispatch(clearErrors());
-                  setVisible(false);
-                }}
-              >
-                <CloseIcon />
-              </Button>
-            </Alert>
-          ) : null}
-        </Snackbar>
       </Container>
     </>
   );

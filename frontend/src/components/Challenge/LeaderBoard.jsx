@@ -1,4 +1,4 @@
-import { CircularProgress, Container, Typography, Box } from "@mui/material";
+import { CircularProgress, Container, Typography, Box, Avatar } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { challengeLeaderBoard } from "../../../Redux/challenge/challengeSlice";
@@ -71,9 +71,11 @@ const LeaderBoard = ({ id }) => {
                       gap: 10,
                       flexWrap: "wrap",
                       padding: 5,
+                      alignItems:"center"
                     }}
                   >
                     <Typography variant="body1">{index + 1}</Typography>
+                    <Avatar src={item?.avatar}/>
                     <Typography
                       variant="body1"
                       style={{

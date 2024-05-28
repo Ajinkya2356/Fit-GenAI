@@ -16,7 +16,7 @@ import Logo from "../images/logo.jpg";
 import { useSelector, useDispatch } from "react-redux";
 import Tooltip from "@mui/material/Tooltip";
 import { logoutAction } from "../../../Redux/user/userSlice.js";
-import Exercises from "../Exercise/Exercises.jsx";
+import Notification from "../common/Notification.js";
 import MonetizationOn from "@mui/icons-material/MonetizationOn.js";
 const pages = ["Home", "Challenges", "Workout", "Exercises", "Posts"];
 const userMap = ["Login", "Register"];
@@ -47,7 +47,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const { isAuthenticated, user,coins } = useSelector((state) => state.USER);
+  const { isAuthenticated, user, coins } = useSelector((state) => state.USER);
   const dispatch = useDispatch();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -196,6 +196,7 @@ const Navbar = () => {
                 }}
                 onClick={() => {
                   dispatch(logoutAction());
+                  Notification("Logout successful", "success");
                 }}
               >
                 Logout

@@ -20,7 +20,10 @@ export const loginAction = (username, password) => async (dispatch) => {
     localStorage.setItem("accessToken", data.data.accessToken);
     dispatch(loginSuccess(data.data));
   } catch (error) {
-    dispatch(loginFail(error.response.data.message));
+    const errorMessage = error.response.data
+      ? error.response.data
+      : "An Error Occured";
+    dispatch(loginFail(errorMessage));
   }
 };
 export const registerAction = (userData) => async (dispatch) => {
@@ -42,7 +45,10 @@ export const registerAction = (userData) => async (dispatch) => {
     );
     dispatch(registerSuccess());
   } catch (error) {
-    dispatch(registerFail(error.response.data.message));
+    const errorMessage = error.response.data
+      ? error.response.data
+      : "An Error Occured";
+    dispatch(registerFail(errorMessage));
   }
 };
 export const logoutAction = () => async (dispatch) => {
@@ -61,7 +67,10 @@ export const logoutAction = () => async (dispatch) => {
     localStorage.removeItem("accessToken");
     dispatch(logoutSuccess());
   } catch (error) {
-    dispatch(logoutFail(error.response.data.message));
+    const errorMessage = error.response.data
+      ? error.response.data
+      : "An Error Occured";
+    dispatch(logoutFail(errorMessage));
   }
 };
 export const loadUser = () => async (dispatch) => {
@@ -176,8 +185,11 @@ export const forgotPasswordAction = (userEmail) => async (dispatch) => {
       config
     );
     dispatch(forgotPasswordSuccess());
-  } catch (e) {
-    dispatch(forgotPasswordFail(e.response.data.message));
+  } catch (error) {
+    const errorMessage = error.response.data
+      ? error.response.data
+      : "An Error Occured";
+    dispatch(forgotPasswordFail(errorMessage));
   }
 };
 export const resetPasswordAction =
@@ -197,9 +209,11 @@ export const resetPasswordAction =
         config
       );
       dispatch(resetPasswordSuccess());
-    } catch (e) {
-      console.log(e);
-      dispatch(resetPasswordFail(e.response.data.message));
+    } catch (error) {
+      const errorMessage = error.response.data
+      ? error.response.data
+      : "An Error Occured";
+      dispatch(resetPasswordFail(errorMessage));
     }
   };
 export const addCoins = (coins) => async (dispatch) => {
@@ -310,9 +324,11 @@ export const loginSlice = createSlice({
     },
     forgotPasswordSuccess(state, action) {
       state.loading = false;
+      state.isEmailSent=true;
     },
     forgotPasswordRequest(state, action) {
       state.loading = true;
+      state.isEmailSent=false;
     },
     forgotPasswordFail(state, action) {
       state.loading = false;
@@ -323,6 +339,7 @@ export const loginSlice = createSlice({
     },
     resetPasswordSuccess(state, action) {
       state.loading = false;
+      state.passwordReset=true;
     },
     resetPasswordFail(state, action) {
       state.loading = false;

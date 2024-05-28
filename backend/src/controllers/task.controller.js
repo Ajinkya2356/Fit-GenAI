@@ -15,9 +15,9 @@ const createTask = AsyncHandler(async (req, res) => {
   const { success, error } = taskBody.safeParse(req.body);
   const { title, exercise, reps, challenge, coin, time_limit } = req.body;
   if (!success) {
-    console.log(error);
     throw new apiError(400, "Invalid Input");
   }
+  
   const task = await Task.create({
     title,
     exercise,

@@ -65,7 +65,9 @@ const createChallenge = AsyncHandler(async (req, res) => {
   if (start_Date > end_Date || !startDate || !endDate) {
     throw new apiError(400, "Invalid date range");
   }
-  const duration = end_Date.getDate() - start_Date.getDate();
+  const duration = Math.ceil(
+    (end_Date.getTime() - start_Date.getTime()) / (1000 * 60 * 60 * 24)
+  );
   const coverImageLocalPath = req.file.path;
 
   if (!coverImageLocalPath) {
@@ -126,6 +128,9 @@ const joinChallenge = AsyncHandler(async (req, res) => {
   const challenge = await Challenge.findById(id);
   if (!challenge) {
     throw new apiError(404, "Challenge not found");
+  }
+  if (challenge.status === "Expired") {
+    throw new apiError(404, "Challenge Expired");
   }
   if (challenge.participants.length >= challenge.participants_limit) {
     throw new apiError(400, "Challenge is full");
@@ -214,7 +219,9 @@ const updateChallenge = AsyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid date range");
   }
 
-  const duration = end_Date?.getDate() - start_Date?.getDate();
+  const duration = Math.ceil(
+    (end_Date.getTime() - start_Date.getTime()) / (1000 * 60 * 60 * 24)
+  );
   const newChallenge = await Challenge.findByIdAndUpdate(
     id,
     {

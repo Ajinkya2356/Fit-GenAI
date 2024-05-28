@@ -15,8 +15,12 @@ import {
   clearErrors,
   updateDetails,
 } from "../../../Redux/user/userSlice";
+import { CircularProgress } from "@mui/material";
+import Notification from "../common/Notification";
 const Profile = () => {
-  const { user, isAuthenticated, loading } = useSelector((state) => state.USER);
+  const { user, isAuthenticated, loading, error } = useSelector(
+    (state) => state.USER
+  );
   const dispatch = useDispatch();
 
   const [name, setName] = useState(user?.user?.name);
@@ -60,17 +64,43 @@ const Profile = () => {
     if (!isAuthenticated) {
       navigate("/login");
     }
-  }, [navigate, isAuthenticated]);
+    if (error) {
+      Notification(error, "danger");
+      dispatch(clearErrors());
+    }
+  }, [navigate, isAuthenticated, error]);
   if (loading || !user) {
-    return <h1>Loading...</h1>;
+    return (
+      <Box>
+        <CircularProgress />
+      </Box>
+    );
   }
   return (
     <>
-      <Container maxWidth="sm">
-        <Typography variant="h4" gutterBottom>
+      <Container
+        maxWidth="sm"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+          padding: 5,
+        }}
+      >
+        <Typography variant="h4" gutterBottom margin={"5%"}>
           My Profile
         </Typography>
-        <Box sx={{ display: "flex", flexDirection: "row" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            border: "1px solid gray",
+            padding: 5,
+            flexWrap: "wrap",
+            gap: 3,
+          }}
+        >
           <Box>
             <Avatar
               src={avatar}
@@ -96,7 +126,6 @@ const Profile = () => {
                   const file = event.target.files[0];
                   setAvatar(URL.createObjectURL(file));
                   setFile(file);
-                  console.log(file);
                 }}
               />
             </Button>
@@ -116,12 +145,15 @@ const Profile = () => {
                   id="outlined-basic"
                   label={key}
                   variant="outlined"
-                  value={StateToName[key]}
+                  value={
+                    key == "createdAt"
+                      ? FormalDate(createdAt)
+                      : StateToName[key]
+                  }
                   onChange={(e) => {
                     NameToState[key](e.target.value);
                   }}
                   sx={{ margin: "1rem", width: "100%" }}
-                  // disabled
                 />
               );
             })}
@@ -133,24 +165,23 @@ const Profile = () => {
               }}
             >
               <Button
-                variant="outlined"
+                variant="contained"
                 color="primary"
                 sx={{ margin: "1rem" }}
                 onClick={() => {
                   if (file !== null) {
                     dispatch(changeAvatar(file));
-                    dispatch(clearErrors());
                   }
                   if (user && isUpdated()) {
                     dispatch(updateDetails(userData));
-                    dispatch(clearErrors());
+                    Notification("Profile Updated Successfully", "success");
                   }
                 }}
               >
-                Edit Profile
+                Save
               </Button>
               <Button
-                variant="outlined"
+                variant="contained"
                 color="error"
                 sx={{ margin: "1rem" }}
                 onClick={() => {

@@ -209,7 +209,6 @@ const Create = () => {
               return;
             }
             dispatch(createChallenge(challenge));
-            navigate(`/my-challenges`);
             Notification("Challenge created successfully", "success");
           }}
         >

@@ -4,17 +4,34 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import { defaultValues } from "../Constants/defaultValues";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./register.module.css";
-import { forgotPasswordAction } from "../../../Redux/user/userSlice";
+import {
+  clearErrors,
+  forgotPasswordAction,
+} from "../../../Redux/user/userSlice";
+import Notification from "../common/Notification";
+import { useNavigate } from "react-router-dom";
 const ForgotPassword = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { error, isEmailSent } = useSelector((state) => state.USER);
   const [email, setEmail] = useState("");
   const handleSubmit = (email) => {
     if (email) {
       dispatch(forgotPasswordAction(email));
     }
   };
+  useEffect(() => {
+    if (error) {
+      Notification(error, "danger");
+      dispatch(clearErrors());
+    }
+    if (isEmailSent) {
+      Notification("Check E-mail for reseting password", "success");
+      navigate("/");
+    }
+  }, [error, isEmailSent]);
   return (
     <Container maxWidth="sm" className={styles.outer}>
       <div className={styles.text}>

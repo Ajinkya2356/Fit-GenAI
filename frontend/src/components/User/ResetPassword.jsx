@@ -1,24 +1,39 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
 import { defaultValues } from "../Constants/defaultValues";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./register.module.css";
-import { resetPasswordAction } from "../../../Redux/user/userSlice";
+import {
+  clearErrors,
+  resetPasswordAction,
+} from "../../../Redux/user/userSlice";
+import Notification from "../common/Notification";
 const ResetPassword = () => {
   const { token } = useParams();
   const dispatch = useDispatch();
-  console.log(token);
+  const navigate = useNavigate();
+  const { error, passwordReset } = useSelector((state) => state.USER);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const handleSubmit = (newP, confirm) => {
     if (newP && confirm) {
-      dispatch(resetPasswordAction(newP, confirm,token));
+      dispatch(resetPasswordAction(newP, confirm, token));
     }
   };
+  useEffect(() => {
+    if (error) {
+      Notification(error, "danger");
+      dispatch(clearErrors());
+    }
+    if (passwordReset) {
+      Notification("Password reset successfully", "success");
+      navigate("/login");
+    }
+  }, [error, passwordReset]);
   return (
     <Container maxWidth="sm" className={styles.outer}>
       <div className={styles.text}>

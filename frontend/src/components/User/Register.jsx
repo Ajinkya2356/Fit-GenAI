@@ -18,6 +18,7 @@ import { registerAction, clearErrors } from "../../../Redux/user/userSlice";
 import { useSelector } from "react-redux";
 import { Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Notification from "../common/Notification";
 const Register = () => {
   const fields = ["Name", "Username", "Email", "Password"];
   const [file, setFile] = useState(null);
@@ -38,15 +39,18 @@ const Register = () => {
     password,
     avatar,
   };
+  const [showPasswordField, setShowPasswordField] = useState(false);
   // console.log(user);
   useEffect(() => {
-    // if (isRegistered) {
-    //   navigate("/login");
-    // }
-    if (error) {
-      setVisible(true);
+    if (isRegistered) {
+      Notification("Registration Successful", "success");
+      navigate("/login");
     }
-  }, [error, dispatch]);
+    if (error) {
+      Notification(error, "danger");
+      dispatch(clearErrors());
+    }
+  }, [error, dispatch, isRegistered]);
   return (
     <>
       <Container maxWidth="sm" className={styles.outer}>
@@ -84,21 +88,33 @@ const Register = () => {
                     setPassword(event.target.value);
                   }
                 }}
-                type={isPasswordField && !showPassword ? "password" : "text"}
+                type={
+                  isPasswordField
+                    ? showPasswordField
+                      ? "text"
+                      : "password"
+                    : "text"
+                }
                 InputProps={
                   isPasswordField
                     ? {
                         endAdornment: (
                           <InputAdornment position="end">
                             <IconButton
-                              onClick={() => setShowPassword(!showPassword)}
+                              onClick={() =>
+                                isPasswordField
+                                  ? setShowPasswordField(!showPasswordField)
+                                  : null
+                              }
                               edge="end"
                             >
-                              {showPassword ? (
-                                <VisibilityOff />
-                              ) : (
-                                <Visibility />
-                              )}
+                              {isPasswordField ? (
+                                showPasswordField ? (
+                                  <VisibilityOff />
+                                ) : (
+                                  <Visibility />
+                                )
+                              ) : null}
                             </IconButton>
                           </InputAdornment>
                         ),
@@ -136,7 +152,6 @@ const Register = () => {
             variant="contained"
             onClick={() => {
               dispatch(registerAction(user));
-              navigate("/login");
             }}
             sx={{ margin: "10px" }}
           >

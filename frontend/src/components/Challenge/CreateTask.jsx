@@ -16,7 +16,7 @@ import { getExerciseAction } from "../../../Redux/exercise/exerciseSlice";
 import { createTask } from "../../../Redux/challenge/challengeSlice";
 import Notification from "../common/Notification";
 
-const CreateTask = ({ id, toggleDrawer }) => {
+const CreateTask = ({ id, toggleDrawer, status }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getExerciseAction("", ""));
@@ -90,6 +90,11 @@ const CreateTask = ({ id, toggleDrawer }) => {
           variant="contained"
           fullWidth
           onClick={() => {
+            if (status === "Expired" || status === "Upcoming") {
+              Notification(`Challenge is ${status}`, "danger");
+              toggleDrawer(false);
+              return;
+            }
             dispatch(createTask(data));
             Notification("Task Created Successfully", "success");
             toggleDrawer(false);

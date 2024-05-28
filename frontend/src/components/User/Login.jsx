@@ -6,7 +6,7 @@ import Input from "@mui/material/Input";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Container from "@mui/material/Container";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Slide from "@mui/material/Slide";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -18,6 +18,7 @@ import { loginAction } from "../../../Redux/user/userSlice";
 import { Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { clearErrors } from "../../../Redux/user/userSlice";
+import Notification from "../common/Notification";
 const Login = () => {
   const fields = ["Username or Email", "Password"];
   const dispatch = useDispatch();
@@ -26,7 +27,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-
+  const [showPasswordField, setShowPasswordField] = useState(false);
   const { user, loading, isAuthenticated, error } = useSelector(
     (state) => state.USER
   );
@@ -35,11 +36,14 @@ const Login = () => {
       dispatch(loginAction(username, password));
     }
   };
+  const location = useLocation();
   useEffect(() => {
     if (error) {
-      setVisible(true);
+      Notification(error, "danger");
+      dispatch(clearErrors());
     }
     if (isAuthenticated) {
+      Notification("Login successful", "success");
       navigate("/profile");
     }
   }, [dispatch, isAuthenticated, error]);
@@ -67,7 +71,13 @@ const Login = () => {
                     : setUsername(e.target.value)
                 }
                 value={isPasswordField ? password : username}
-                type={isPasswordField && !showPassword ? "password" : "text"}
+                type={
+                  isPasswordField
+                    ? showPasswordField
+                      ? "text"
+                      : "password"
+                    : "text"
+                }
                 InputProps={
                   isPasswordField
                     ? {
@@ -75,13 +85,11 @@ const Login = () => {
                           <InputAdornment position="end">
                             <IconButton
                               onClick={() =>
-                                setShowPassword(
-                                  (prevShowPassword) => !prevShowPassword
-                                )
+                                setShowPasswordField(!showPasswordField)
                               }
                               edge="end"
                             >
-                              {showPassword ? (
+                              {showPasswordField ? (
                                 <VisibilityOff />
                               ) : (
                                 <Visibility />

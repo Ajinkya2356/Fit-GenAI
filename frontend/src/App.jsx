@@ -3,7 +3,7 @@ import Home from "./components/Home/Home";
 import Login from "./components/User/Login";
 import Register from "./components/User/Register";
 import Navbar from "./components/common/Navbar";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import frontBanner from "./components/images/frontBanner.avif";
 import Footer from "./components/common/Footer";
 import Workout from "./components/Workouts/Workout";
@@ -29,11 +29,23 @@ import MyExercises from "./components/User/MyExercises";
 import EditExercise from "./components/Exercise/EditExercise";
 import Posts from "./components/Posts/Posts";
 import Collections from "./components/Collection/Collections";
-import 'react-notifications-component/dist/theme.css'
-import { ReactNotifications } from 'react-notifications-component'
+import "react-notifications-component/dist/theme.css";
+import { ReactNotifications } from "react-notifications-component";
+
+function LoadUser() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.USER);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login");
+    }
+  }, [isAuthenticated]);
+
+  return null;
+}
 function App() {
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state) => state.USER);
   useEffect(() => {
     dispatch(loadUser());
     dispatch(clearErrors());
@@ -49,6 +61,7 @@ function App() {
         <ReactNotifications />
         <Navbar />
         <Routes>
+          <Route path="*" element={<LoadUser />} />
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

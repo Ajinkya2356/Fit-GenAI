@@ -63,6 +63,7 @@ const Workout = () => {
               flexDirection: "row",
               gap: "10px",
               marginBottom: "10px",
+              alignSelf:"flex-end"
             }}
           >
             <IconButton
