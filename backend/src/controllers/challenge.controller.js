@@ -8,6 +8,7 @@ import zod from "zod";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 import mongoose from "mongoose";
 import { Task } from "../Models/task.model.js";
+import { userLikeSuccess } from "../../../frontend/Redux/exercise/exerciseSlice.js";
 const challengeBody = zod.object({
   name: zod.string(),
   description: zod.string(),
@@ -89,7 +90,7 @@ const createChallenge = AsyncHandler(async (req, res) => {
       category: categoryExists._id,
       goal,
       reward,
-      participants: [req.user._id],
+      participants: [{ user: req.user._id, coins: 0 }],
       participants_limit: parseInt(participants_limit),
       cover_image: coverImage.url,
     };
@@ -139,10 +140,13 @@ const joinChallenge = AsyncHandler(async (req, res) => {
   if (!user) {
     throw new apiError(404, "User not found");
   }
-  if (challenge.participants.includes(user._id)) {
+  const participant = challenge.participants.find(
+    (p) => p.user.toString() === req.user._id.toString()
+  );
+  if (participant) {
     throw new apiError(400, "Already joined the challenge");
   }
-  challenge.participants.push(user._id);
+  challenge.participants.push({ user: req.user._id, coins: 0 });
   await challenge.save();
   return res
     .status(200)
@@ -158,11 +162,15 @@ const leaveChallenge = AsyncHandler(async (req, res) => {
   if (!user) {
     throw new apiError(404, "User not found");
   }
-  if (!challenge.participants.includes(user._id)) {
+  const participant = challenge.participants.find(
+    (p) => p.user.toString() === req.user._id.toString()
+  );
+  if (!participant) {
     throw new apiError(400, "Not joined the challenge");
   }
-  const index = challenge.participants.indexOf(user._id);
-  challenge.participants.splice(index, 1);
+  challenge.participants = challenge.participants.filter((p) => {
+    return p.user.toString() !== req.user._id.toString();
+  });
   await challenge.save();
   return res
     .status(200)
@@ -267,24 +275,6 @@ const getSingleChallenge = AsyncHandler(async (req, res) => {
       },
       {
         $lookup: {
-          from: "users",
-          localField: "participants",
-          foreignField: "_id",
-          pipeline: [
-            {
-              $project: {
-                _id: 1,
-                name: 1,
-                email: 1,
-                avatar: 1,
-              },
-            },
-          ],
-          as: "participants",
-        },
-      },
-      {
-        $lookup: {
           from: "categories",
           localField: "category",
           foreignField: "_id",
@@ -329,7 +319,7 @@ const getSingleChallenge = AsyncHandler(async (req, res) => {
           goal: 1,
           reward: 1,
           status: 1,
-          participants: "$participants",
+          participants: 1,
           participants_limit: 1,
           cover_image: 1,
           createdAt: 1,
@@ -464,6 +454,48 @@ const creditCoins = AsyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, user, "Coins credited successfully"));
 });
+const addParticipantCoins = AsyncHandler(async (req, res) => {
+  try {
+    const { val, challengeID, userID } = req.body;
+    const challenge = await Challenge.findById(challengeID);
+    challenge.participants = challenge.participants.map((participant) => {
+      if (participant.user.toString() === userID) {
+        return {
+          user: userID,
+          coins: participant.coins + val,
+        };
+      }
+      return participant;
+    });
+    await challenge.save();
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Coins Added Successfully"));
+  } catch (error) {
+    throw new apiError(error.message, 404);
+  }
+});
+const challengeLeaderBoard = AsyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+    const challenge = await Challenge.findById(id);
+    const leaderBoard = await Promise.all(
+      challenge.participants.map(async (participant) => {
+        const userDetails = await User.findById(participant.user).select(
+          "_id avatar username"
+        );
+        return { user: userDetails, coins: participant.coins };
+      })
+    );
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, leaderBoard, "LeaderBoard fetched successfully")
+      );
+  } catch (error) {
+    throw new apiError(error.message, 404);
+  }
+});
 export {
   createChallenge,
   getChallenges,
@@ -478,4 +510,6 @@ export {
   completeTask,
   getTaskById,
   creditCoins,
+  addParticipantCoins,
+  challengeLeaderBoard,
 };

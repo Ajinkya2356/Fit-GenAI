@@ -60,9 +60,9 @@ const DetailedChallenge = () => {
   const toggleDrawer = (open) => {
     setOpen(open);
   };
-
+  console.log(challenge?.participants);
   const joined = challenge?.participants?.filter((p) => {
-    return p._id === user?.user?._id;
+    return p.user === user?.user?._id;
   });
   useEffect(() => {}, [Task]);
   useEffect(() => {
@@ -451,11 +451,15 @@ const DetailedChallenge = () => {
                               task.completed.includes(user?.user?._id)
                                 ? -task.coin
                                 : task.coin,
+                              id,
                               user?.user?._id
                             )
                           );
                         }}
-                        disabled={challenge?.status === "Expired" || "Upcoming"}
+                        disabled={
+                          challenge?.status === "Expired" ||
+                          challenge?.status === "Upcoming"
+                        }
                       />
                       {task.title}
                       {task.completed.includes(user?.user?._id) && (

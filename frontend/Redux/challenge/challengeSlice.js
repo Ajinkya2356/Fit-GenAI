@@ -257,7 +257,7 @@ export const getTask = (taskId) => async (dispatch) => {
     dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
-export const creditCoins = (coins, userId) => async (dispatch) => {
+export const creditCoins = (val, challengeID, userID) => async (dispatch) => {
   try {
     const token = localStorage.getItem("accessToken");
     if (!token) return;
@@ -269,8 +269,8 @@ export const creditCoins = (coins, userId) => async (dispatch) => {
       withCredentials: true,
     };
     const response = await axios.post(
-      `http://localhost:8000/api/v1/challenge/task/credit`,
-      { coins, userId },
+      `http://localhost:8000/api/v1/challenge/addCoins`,
+      { val, challengeID, userID },
       config
     );
     dispatch(loadUser());
@@ -316,7 +316,7 @@ export const challengeLeaderBoard = (id) => async (dispatch) => {
       withCredentials: true,
     };
     const { data } = await axios.get(
-      `http://localhost:8000/api/v1/users/leaderBoard/${id}`,
+      `http://localhost:8000/api/v1/challenge/board/${id}`,
       config
     );
     dispatch(getLeaderSuccess(data.data));
@@ -359,7 +359,7 @@ const challengeSlice = createSlice({
     getUserChallengeSuccess(state, action) {
       state.loading = false;
       state.userChallenges = action.payload;
-    },  
+    },
     createTaskRequest(state, action) {
       state.loading = true;
     },

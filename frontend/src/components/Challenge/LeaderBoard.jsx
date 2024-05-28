@@ -54,7 +54,7 @@ const LeaderBoard = ({ id }) => {
                   key={index}
                   style={{
                     border:
-                      item._id === user?.user?._id
+                      item.user._id === user?.user?._id
                         ? "1px solid gold"
                         : "1px solid white",
                     display: "flex",
@@ -75,7 +75,7 @@ const LeaderBoard = ({ id }) => {
                     }}
                   >
                     <Typography variant="body1">{index + 1}</Typography>
-                    <Avatar src={item?.avatar}/>
+                    <Avatar src={item?.user?.avatar}/>
                     <Typography
                       variant="body1"
                       style={{
@@ -85,7 +85,7 @@ const LeaderBoard = ({ id }) => {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {item?.username}
+                      {item?.user?.username}
                     </Typography>
                   </Box>
                   <Box
@@ -95,7 +95,7 @@ const LeaderBoard = ({ id }) => {
                     }}
                   >
                     <MonetizationOnIcon style={{ color: "gold" }} />
-                    <Typography variant="body1">{item?.coinBalance}</Typography>
+                    <Typography variant="body1">{item?.coins}</Typography>
                   </Box>
                 </Box>
               );
