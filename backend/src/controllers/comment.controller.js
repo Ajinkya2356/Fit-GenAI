@@ -4,6 +4,7 @@ import apiError from "../utils/apiError.js";
 import zod from "zod";
 import { Comment } from "../Models/comment.model.js";
 import ApiResponse from "../utils/apiResponse.js";
+import mongoose from "mongoose";
 const commentBody = zod.object({
   rating: zod.number(),
   message: zod.string(),
@@ -31,22 +32,31 @@ const addComment = AsyncHandler(async (req, res) => {
     (item) => item.toString() === req.user._id.toString()
   );
   if (!userExists) {
-    throw new apiError(403, "You are not part of this workout");
+    throw new apiError(403, "Join Workout to add comment");
   }
 
   const commentExists = await Comment.findOne({
     user: req.user._id,
     workout: workoutId,
   });
+  let comment;
   if (commentExists) {
-    throw new apiError(403, "Comment already added");
+    comment = await Comment.findByIdAndUpdate(
+      commentExists._id,
+      {
+        rating,
+        message,
+      },
+      { new: true }
+    );
+  } else {
+    comment = await Comment.create({
+      user: req.user._id,
+      workout: workoutId,
+      rating: rating ? rating : 3,
+      message,
+    });
   }
-  const comment = await Comment.create({
-    user: req.user._id,
-    workout: workoutId,
-    rating: rating ? rating : 3,
-    message,
-  });
 
   return res
     .status(200)
@@ -117,7 +127,38 @@ const getAllComments = AsyncHandler(async (req, res) => {
 });
 const getWorkoutComments = AsyncHandler(async (req, res) => {
   const { workoutId } = req.params;
-  const comments = await Comment.find({ workout: workoutId });
+  const comments = await Comment.aggregate([
+    {
+      $match: {
+        workout: new mongoose.Types.ObjectId(workoutId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        pipeline: [
+          {
+            $project: {
+              _id: 1,
+              username: 1,
+              avatar: 1,
+            },
+          },
+        ],
+        as: "user",
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        user: { $arrayElemAt: ["$user", 0] },
+        rating: 1,
+        message: 1,
+      },
+    },
+  ]);
   if (!comments) {
     throw new apiError(404, "No comments found");
   }

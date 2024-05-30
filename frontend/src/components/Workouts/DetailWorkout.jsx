@@ -18,6 +18,7 @@ import ExerciseCard from "./ExerciseCard";
 import Loader from "../common/Loader";
 import CustomTimeline from "../common/Timeline";
 import Notification from "../common/Notification";
+import Comments from "./Comments";
 const DetailWorkout = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -253,6 +254,7 @@ const DetailWorkout = () => {
                 );
               })}
             </Typography>
+            <Comments id={id} />
           </Container>
         </>
       )}

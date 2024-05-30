@@ -145,13 +145,14 @@ const Profile = () => {
                   id="outlined-basic"
                   label={key}
                   variant="outlined"
+                  readOnly={key === "createdAt"}
                   value={
                     key == "createdAt"
                       ? FormalDate(createdAt)
                       : StateToName[key]
                   }
                   onChange={(e) => {
-                    NameToState[key](e.target.value);
+                    if (key !== "createdAt") NameToState[key](e.target.value);
                   }}
                   sx={{ margin: "1rem", width: "100%" }}
                 />
