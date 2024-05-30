@@ -20,12 +20,23 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import { getAllCategories } from "../../../Redux/category/categorySlice";
+import {
+  getAllCategories,
+  createCategory,
+} from "../../../Redux/category/categorySlice";
 import Notification from "../common/Notification";
-const Create = () => {
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+const Create = ({ setOpen }) => {
   useEffect(() => {
     dispatch(getAllCategories());
   }, []);
+  const [openNew, setOpenNew] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
   const { categories } = useSelector((state) => state.CATEGORY);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -126,14 +137,47 @@ const Create = () => {
             label="Category"
             value={category}
             onChange={(e) => {
-              setCategory(e.target.value);
+              if (e.target.value === "new") {
+                setOpenNew(true);
+              } else {
+                setCategory(e.target.value);
+              }
             }}
           >
             {categories.map((category, ind) => {
               return <MenuItem value={category._id}>{category.name}</MenuItem>;
             })}
+            <MenuItem value="new">Create new</MenuItem>
           </Select>
         </FormControl>
+        <Dialog open={openNew} onClose={() => setOpenNew(false)}>
+          <DialogTitle>Create new category</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Category Name"
+              type="text"
+              fullWidth
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenNew(false)}>Cancel</Button>
+            <Button
+              onClick={() => {
+                setNewCategory("");
+                setOpenNew(false);
+                dispatch(createCategory(newCategory));
+              }}
+            >
+              Create
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         <Button
           fullWidth
           variant="contained"
@@ -209,6 +253,7 @@ const Create = () => {
               return;
             }
             dispatch(createChallenge(challenge));
+            setOpen(false);
             Notification("Challenge created successfully", "success");
           }}
         >

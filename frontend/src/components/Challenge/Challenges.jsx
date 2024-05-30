@@ -152,7 +152,7 @@ const Challenges = () => {
                   onClose={() => setOpen(false)}
                   anchor="right"
                 >
-                  <Create />
+                  <Create setOpen={setOpen} />
                 </Drawer>
               </>
             )}
