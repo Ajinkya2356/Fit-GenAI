@@ -16,6 +16,7 @@ import {
   creditCoins,
   challengeLeaderBoard,
   addParticipantCoins,
+  chooseWinner,
 } from "../controllers/challenge.controller.js";
 import { upload } from "../Middlewares/multer.middleware.js";
 import { createTask } from "../controllers/task.controller.js";
@@ -39,5 +40,6 @@ router.route("/check/:id").get(verifyJWT, completeTask);
 router.route("/task/:id").get(verifyJWT, getTaskById);
 router.route("/task/credit").post(verifyJWT, creditCoins);
 router.route("/board/:id").get(verifyJWT, challengeLeaderBoard);
-router.route("/addCoins").post(verifyJWT,addParticipantCoins);
+router.route("/addCoins").post(verifyJWT, addParticipantCoins);
+router.route("/winner").post(chooseWinner);
 export default router;

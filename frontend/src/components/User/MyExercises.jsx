@@ -1,5 +1,11 @@
-import { Box, CircularProgress, Container, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Drawer,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteExercise,
@@ -10,6 +16,7 @@ import { IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
+import EditExercise from "../Exercise/EditExercise";
 const MyExercises = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,6 +24,7 @@ const MyExercises = () => {
     dispatch(userExercise());
   }, []);
   const { userExercises, loading } = useSelector((state) => state.EXERCISE);
+
   return (
     <Container
       maxWidth={false}
@@ -110,6 +118,7 @@ const MyExercises = () => {
                   >
                     <EditIcon style={{ color: "white" }} />
                   </IconButton>
+
                   <IconButton
                     onClick={() => {
                       dispatch(deleteExercise(exercise?._id));

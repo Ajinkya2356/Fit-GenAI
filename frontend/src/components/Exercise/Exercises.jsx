@@ -43,10 +43,12 @@ const Exercises = () => {
         style={{
           color: "white",
           minWidth: "sm",
-          margin: 10,
+          flexWrap: "wrap",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          /* border:"2px solid white", */
+          padding: 5,
         }}
       >
         <TextField
@@ -110,6 +112,14 @@ const Exercises = () => {
           </FormControl>
           <Button
             variant="contained"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Add Exercise
+          </Button>
+          <Button
+            variant="contained"
             sx={{
               m: 1,
             }}
@@ -120,20 +130,20 @@ const Exercises = () => {
           >
             Clear
           </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            Add Exercise
-          </Button>
+
           <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
             <AddExercise setOpen={setOpen} />
           </Drawer>
         </Box>
       </Box>
-      <Box style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
+      <Box
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          gap: 20,
+        }}
+      >
         {loading ? (
           <Box
             style={{

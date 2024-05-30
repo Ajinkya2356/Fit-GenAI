@@ -43,6 +43,7 @@ import ExerciseDetail from "./ExerciseDetail";
 import CustomTimeline from "../common/Timeline";
 import Notification from "../common/Notification";
 import LeaderBoard from "./LeaderBoard";
+import styles from "./leader.module.css";
 const DetailedChallenge = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -208,6 +209,7 @@ const DetailedChallenge = () => {
                 objectFit: "contain",
               }}
             />
+
             <Box
               style={{
                 display: "flex",
@@ -377,6 +379,21 @@ const DetailedChallenge = () => {
                   >
                     <LocationSearchingIcon />
                     {challenge?.goal}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box style={{ padding: 10,display:"flex",flexDirection:"column",gap:10 }}>
+                <Typography variant="h5" color="white">
+                  Winner of the Challenge
+                </Typography>
+                <Box
+                  className={styles.winner}
+                >
+                  <Avatar src={challenge?.winner?.avatar} />
+                  <Typography variant="body1" color="white">
+                    {challenge?.winner
+                      ? challenge?.winner?.username
+                      : "Winner To be annouced soon"}
                   </Typography>
                 </Box>
               </Box>

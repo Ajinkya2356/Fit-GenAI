@@ -1,24 +1,32 @@
-import { CircularProgress, Container, Typography, Box, Avatar } from "@mui/material";
+import {
+  CircularProgress,
+  Container,
+  Typography,
+  Box,
+  Avatar,
+} from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { challengeLeaderBoard } from "../../../Redux/challenge/challengeSlice";
+import {
+  challengeLeaderBoard,
+  chooseWinner,
+} from "../../../Redux/challenge/challengeSlice";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 const LeaderBoard = ({ id }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.USER);
-  useEffect(() => {
-    dispatch(challengeLeaderBoard(id));
-
-    const intervalId = setInterval(() => {
-      dispatch(challengeLeaderBoard(id));
-    }, 5 * 60 * 1000);
-
-    return () => clearInterval(intervalId);
-  }, [dispatch]);
   const { leadLoading, userLeaderBoard } = useSelector(
     (state) => state.CHALLENGE
   );
+  useEffect(() => {
+    dispatch(challengeLeaderBoard(id));
+    const intervalId = setInterval(() => {
+      dispatch(challengeLeaderBoard(id));
+    }, 5 * 60 * 1000);
+    dispatch(chooseWinner(id, userLeaderBoard?.[0]?.user?._id));
+    return () => clearInterval(intervalId);
+  }, [dispatch]);
 
   return (
     <Container
@@ -71,11 +79,11 @@ const LeaderBoard = ({ id }) => {
                       gap: 10,
                       flexWrap: "wrap",
                       padding: 5,
-                      alignItems:"center"
+                      alignItems: "center",
                     }}
                   >
                     <Typography variant="body1">{index + 1}</Typography>
-                    <Avatar src={item?.user?.avatar}/>
+                    <Avatar src={item?.user?.avatar} />
                     <Typography
                       variant="body1"
                       style={{

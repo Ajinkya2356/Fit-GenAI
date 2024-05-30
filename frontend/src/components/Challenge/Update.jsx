@@ -10,6 +10,7 @@ import {
   InputLabel,
   Input,
   FormControl,
+  CircularProgress,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState } from "react";
@@ -26,6 +27,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { getAllCategories } from "../../../Redux/category/categorySlice";
+import { FormalDate } from "../Challenge/Card";
 const Update = () => {
   const { id } = useParams();
   useEffect(() => {
@@ -33,7 +35,7 @@ const Update = () => {
     dispatch(getAllCategories());
   }, [id]);
 
-  const { challenge } = useSelector((state) => state.CHALLENGE);
+  const { challenge, loading } = useSelector((state) => state.CHALLENGE);
   const { categories } = useSelector((state) => state.CATEGORY);
   console.log("Challenge", challenge);
   const dispatch = useDispatch();
@@ -69,6 +71,7 @@ const Update = () => {
       setStartDate(challenge.startDate);
       setEndDate(challenge.endDate);
       setStatus(challenge.status);
+      setCategory(challenge.category._id);
     }
   }, [challenge]);
   const labelToValue = {
@@ -90,14 +93,12 @@ const Update = () => {
     category,
     status,
   };
-  return (
-    <Container
-      maxWidth={false}
-      style={{
-        backgroundColor: "#333",
-        color: "white",
-      }}
-    >
+  return loading ? (
+    <Box>
+      <CircularProgress />
+    </Box>
+  ) : (
+    <Container maxWidth={false}>
       <h1>Update Challenge</h1>
       <Box
         style={{
@@ -110,23 +111,13 @@ const Update = () => {
           margin: "5%",
         }}
       >
-        {inputLabels.map((label, item) => {
+        {inputLabels?.map((label, item) => {
           return (
             <TextField
               variant="outlined"
               label={label}
               value={labelToValue[label]}
               fullWidth
-              InputProps={{
-                style: {
-                  color: "white",
-                },
-              }}
-              InputLabelProps={{
-                style: {
-                  color: "white",
-                },
-              }}
               onChange={(e) => {
                 const value = e.target.value;
                 switch (label) {
@@ -153,13 +144,7 @@ const Update = () => {
           );
         })}
         <FormControl fullWidth>
-          <InputLabel
-            style={{
-              color: "white",
-            }}
-          >
-            Category
-          </InputLabel>
+          <InputLabel>Category</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
@@ -175,28 +160,7 @@ const Update = () => {
             })}
           </Select>
         </FormControl>
-        <FormControl fullWidth>
-          <InputLabel
-            style={{
-              color: "white",
-            }}
-          >
-            Status
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Category"
-            value={status}
-            onChange={(e) => {
-              setStatus(e.target.value);
-            }}
-          >
-            <MenuItem value={"Upcoming"}>Upcoming</MenuItem>
-            <MenuItem value={"Live"}>Live</MenuItem>
-            <MenuItem value={"Expired"}>Expired</MenuItem>
-          </Select>
-        </FormControl>
+
         <Button
           fullWidth
           variant="contained"

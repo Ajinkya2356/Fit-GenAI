@@ -1,0 +1,22 @@
+.winner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 10px;
+  animation: border-pulse 2s infinite;
+}
+
+@keyframes border-pulse {
+  0% {
+    border-color: #65a1b5;
+  }
+  50% {
+    border-color: #00008b;
+  }
+  100% {
+    border-color: #546b73;
+  }
+}

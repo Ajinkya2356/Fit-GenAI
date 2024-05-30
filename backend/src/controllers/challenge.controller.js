@@ -141,7 +141,7 @@ const joinChallenge = AsyncHandler(async (req, res) => {
     throw new apiError(404, "User not found");
   }
   const participant = challenge.participants.find(
-    (p) => p.user.toString() === req.user._id.toString()
+    (p) => p.user && p.user.toString() === req.user._id.toString()
   );
   if (participant) {
     throw new apiError(400, "Already joined the challenge");
@@ -308,6 +308,23 @@ const getSingleChallenge = AsyncHandler(async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "winner",
+          foreignField: "_id",
+          pipeline: [
+            {
+              $project: {
+                _id: 1,
+                username: 1,
+                avatar: 1,
+              },
+            },
+          ],
+          as: "winner",
+        },
+      },
+      {
         $project: {
           name: 1,
           description: 1,
@@ -323,6 +340,7 @@ const getSingleChallenge = AsyncHandler(async (req, res) => {
           participants_limit: 1,
           cover_image: 1,
           createdAt: 1,
+          winner: { $arrayElemAt: ["$winner", 0] },
         },
       },
     ]);
@@ -496,6 +514,25 @@ const challengeLeaderBoard = AsyncHandler(async (req, res) => {
     throw new apiError(error.message, 404);
   }
 });
+const chooseWinner = AsyncHandler(async (req, res) => {
+  try {
+    const { id, userID } = req.body;
+    const challenge = await Challenge.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          winner: userID,
+        },
+      },
+      { new: true }
+    );
+    return res
+      .status(200)
+      .json(new ApiResponse(200, challenge, "Winner chosen successfully"));
+  } catch (error) {
+    throw new apiError(error.message, 404);
+  }
+});
 export {
   createChallenge,
   getChallenges,
@@ -512,4 +549,5 @@ export {
   creditCoins,
   addParticipantCoins,
   challengeLeaderBoard,
+  chooseWinner,
 };

@@ -76,7 +76,7 @@ challenge.pre("aggregate", function () {
           { $gt: ["$startDate", new Date()] },
           "Upcoming",
           {
-            $cond: [{ $lt: ["$endDate", new Date()] }, "Expired", "Live"],
+            $cond: [{ $lte: ["$endDate", new Date()] }, "Expired", "Live"],
           },
         ],
       },

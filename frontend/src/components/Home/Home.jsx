@@ -28,7 +28,13 @@ const Home = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Container>
+      <Container
+        style={{
+          display: "inherit",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
         <Box
           display="flex"
           justifyContent="space-between"

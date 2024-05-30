@@ -40,7 +40,7 @@ const ExerciseCard = ({ item }) => {
         <Card
           sx={{
             maxWidth: 345,
-            margin: 2,
+            margin: "2px 0px",
             backgroundColor: "white",
             color: "black",
             cursor: "pointer",

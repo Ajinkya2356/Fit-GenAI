@@ -15,13 +15,13 @@ const Section = () => {
     dispatch(getExerciseAction("", ""));
   }, []);
   const { exercises } = useSelector((state) => state.EXERCISE);
- /*  console.log(exercises); */
+  /*  console.log(exercises); */
   return (
     <div
       style={{
         backgroundColor: "rgba(0,0,0,0.5)",
         height: "auto",
-        width: "100%",
+        /* width: "100%", */
         padding: "10px",
         borderRadius: "20px",
         margin: "10px 0",
@@ -37,6 +37,9 @@ const Section = () => {
             display="flex"
             margin="10px"
             flexDirection={index % 2 === 0 ? "row" : "row-reverse"}
+            style={{
+              gap: 20,
+            }}
           >
             <ReactPlayer
               url={item.video_url}

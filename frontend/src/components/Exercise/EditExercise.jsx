@@ -22,7 +22,8 @@ import {
   updateExercise,
 } from "../../../Redux/exercise/exerciseSlice";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-
+import Notification from "../common/Notification";
+import {CircularProgress} from "@mui/material";
 const EditExercise = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -41,22 +42,30 @@ const EditExercise = () => {
   useEffect(() => {
     dispatch(getSingleExercise(id));
     dispatch(getAllCategories());
-  }, []);
+  }, [dispatch]);
   const { categories } = useSelector((state) => state.CATEGORY);
-  const { exercise } = useSelector((state) => state.EXERCISE);
+  const { exercise, loading, error } = useSelector((state) => state.EXERCISE);
   const [data, setData] = useState(exercise);
   useEffect(() => {
-    setData(exercise);
+    setData({
+      name: exercise?.name,
+      description: exercise?.description,
+      categoryID: exercise?.category?.[0]._id,
+      difficulty_level: exercise?.difficulty_level,
+      video: exercise?.video_url,
+      image: exercise?.image_url?.[0],
+    });
   }, [exercise]);
-  console.log(exercise);
-  return (
-    <Container
-      maxWidth={false}
-      style={{
-        backgroundColor: "#333",
-      }}
-    >
-      <Typography variant="h6">Update Exercise</Typography>
+  console.log(data);
+  return loading ? (
+    <Box>
+      <CircularProgress />
+    </Box>
+  ) : (
+    <Container maxWidth={false} style={{ padding: 20 }}>
+      <Typography variant="h6" style={{ margin: "15px 0px" }}>
+        Update Exercise
+      </Typography>
       <Box>
         <FormControl>
           <Grid container spacing={3}>
@@ -83,11 +92,7 @@ const EditExercise = () => {
                           : "Difficulty Level"}
                       </InputLabel>
                       <Select
-                        value={
-                          field === "categoryID"
-                            ? data?.["categoryID"]?.[0]?._id
-                            : data?.[field]
-                        }
+                        value={data?.[field]}
                         onChange={(e) => {
                           setData((prev) => {
                             return { ...prev, [field]: e.target.value };
@@ -165,6 +170,7 @@ const EditExercise = () => {
             }}
             onClick={() => {
               dispatch(updateExercise(data, id));
+              Notification("Exercise Updated Successfully", "success");
               navigate(`/exercises`);
             }}
           >

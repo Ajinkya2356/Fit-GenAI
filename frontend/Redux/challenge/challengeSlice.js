@@ -324,6 +324,19 @@ export const challengeLeaderBoard = (id) => async (dispatch) => {
     dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
   }
 };
+export const chooseWinner = (id, userID) => async (dispatch) => {
+  try {
+    const { data } = await axios.post(
+      "http://localhost:8000/api/v1/challenge/winner",
+      {
+        id,
+        userID,
+      }
+    );
+  } catch (e) {
+    dispatch(globalErrorCatch(e.response.data ? e.response.data : e.response));
+  }
+};
 const challengeSlice = createSlice({
   name: "challenge",
   initialState: {
