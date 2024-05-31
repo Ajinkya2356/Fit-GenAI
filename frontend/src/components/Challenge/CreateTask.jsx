@@ -27,7 +27,7 @@ const CreateTask = ({ id, toggleDrawer, status }) => {
     <Container
       style={{
         padding: "20px",
-        minWidth: "400px",
+        minWidth: "300px",
       }}
     >
       <Typography variant="h4">Create Task</Typography>

@@ -92,6 +92,7 @@ const DetailedChallenge = () => {
         <>
           <Box
             display="flex"
+            flexWrap={"wrap"}
             justifyContent="space-between"
             alignSelf="flex-end"
             gap={2}
@@ -305,6 +306,7 @@ const DetailedChallenge = () => {
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
+                  flexWrap: "wrap",
                   /*  border: "2px solid white", */
                   width: "100%",
                 }}
@@ -382,13 +384,18 @@ const DetailedChallenge = () => {
                   </Typography>
                 </Box>
               </Box>
-              <Box style={{ padding: 10,display:"flex",flexDirection:"column",gap:10 }}>
+              <Box
+                style={{
+                  padding: 10,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                }}
+              >
                 <Typography variant="h5" color="white">
                   Winner of the Challenge
                 </Typography>
-                <Box
-                  className={styles.winner}
-                >
+                <Box className={styles.winner}>
                   <Avatar src={challenge?.winner?.avatar} />
                   <Typography variant="body1" color="white">
                     {challenge?.winner
@@ -420,6 +427,7 @@ const DetailedChallenge = () => {
                   display="flex"
                   justifyContent="space-between"
                   flexDirection="column"
+                  flexWrap={"wrap"}
                   gap={2}
                   sx={{
                     backgroundColor: "#444",
@@ -440,6 +448,7 @@ const DetailedChallenge = () => {
                       justifyContent: "space-between",
                       flexDirection: "row",
                       alignItems: "center",
+                      flexWrap: "wrap",
                     }}
                   >
                     <Typography

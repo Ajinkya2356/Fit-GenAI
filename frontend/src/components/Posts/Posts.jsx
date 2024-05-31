@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Container, Box, Drawer, Button, Typography } from "@mui/material";
+import {
+  Container,
+  Box,
+  Drawer,
+  Button,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../../Redux/posts/postSlice";
 import PostCard from "./PostCard";
@@ -49,9 +56,13 @@ const Posts = () => {
           flexWrap: "wrap",
         }}
       >
-        {posts.map((post, index) => {
-          return <PostCard post={post} key={index} />;
-        })}
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          posts.map((post, index) => {
+            return <PostCard post={post} key={index} />;
+          })
+        )}
       </Box>
     </Container>
   );

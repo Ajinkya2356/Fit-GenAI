@@ -1,4 +1,11 @@
-import { Box, Button, Container, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CardHeader,
+  Container,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSingleExercise } from "../../../Redux/exercise/exerciseSlice";
@@ -24,6 +31,8 @@ import CreateManualStep from "./CreateManualStep";
 import EditIcon from "@mui/icons-material/Edit";
 import UpdateManualStep from "./UpdateManualStep";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Card, CardContent } from "@mui/material";
+import { red, green } from "@mui/material/colors";
 const DetailExercise = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -69,9 +78,9 @@ const DetailExercise = () => {
           flexDirection: "row",
           alignSelf: "flex-start",
           gap: 10,
+          margin: "20px 0px",
         }}
       >
-        Category
         {exercise?.category.map((c, i) => {
           return (
             <Chip
@@ -86,16 +95,34 @@ const DetailExercise = () => {
             />
           );
         })}
+        <Chip
+          label={exercise?.difficulty_level.toUpperCase()}
+          style={{
+            color: "black",
+            maxWidth: "200px",
+            backgroundColor: "floralwhite",
+            alignSelf: "flex-end",
+          }}
+        />
       </Typography>
-      <Chip
-        label={exercise?.difficulty_level.toUpperCase()}
-        style={{
-          color: "black",
-          maxWidth: "200px",
-          backgroundColor: "floralwhite",
-          alignSelf: "flex-end",
-        }}
-      />
+
+      <div style={{ display: "inherit", gap: 10, alignSelf: "flex-end" }}>
+        <IconButton
+          style={{ backgroundColor: "white" }}
+          onClick={() => setDrawer(true)}
+        >
+          <AddIcon style={{ color: "black" }} />
+        </IconButton>
+        <Button
+          onClick={toggleDrawer(true)}
+          variant="contained"
+          style={{
+            alignSelf: "flex-end",
+          }}
+        >
+          Generate Steps with AI
+        </Button>
+      </div>
       <Typography
         variant="h3"
         color="white"
@@ -120,26 +147,10 @@ const DetailExercise = () => {
           margin: "15px",
           display: "flex",
           justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         {exercise?.description}
-        <div style={{ display: "inherit", gap: 10 }}>
-          <IconButton
-            style={{ backgroundColor: "white" }}
-            onClick={() => setDrawer(true)}
-          >
-            <AddIcon style={{ color: "black" }} />
-          </IconButton>
-          <Button
-            onClick={toggleDrawer(true)}
-            variant="contained"
-            style={{
-              alignSelf: "flex-end",
-            }}
-          >
-            Generate Steps with AI
-          </Button>
-        </div>
       </Typography>
       <Drawer anchor="right" onClose={() => setDrawer(false)} open={drawer}>
         <CreateManualStep setDrawer={setDrawer} id={id} />
@@ -204,9 +215,8 @@ const DetailExercise = () => {
             display: "flex",
             flexDirection: "column",
             gap: 10,
-            overflow: "auto",
-            height: "80vh",
-            overflowX: "hidden",
+            overflow: "scroll",
+            maxHeight: "80vh",
             scrollBehavior: "smooth",
             scrollbarWidth: "thin",
             scrollbarColor: "#888 #f1f1f1",
@@ -229,7 +239,8 @@ const DetailExercise = () => {
             steps &&
             steps?.map((s, i) => {
               return (
-                <div
+                <>
+                  {/* <div
                   key={i}
                   style={{
                     display: "flex",
@@ -356,7 +367,141 @@ const DetailExercise = () => {
                       />
                     )}
                   </Typography>
-                </div>
+                </div> */}
+                  <Card
+                    key={i}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      border: 2,
+                      borderColor: "white",
+                      borderRadius: 2,
+                      p: 1,
+                      cursor: "pointer",
+                      bgcolor: "white",
+                      "&:hover": {
+                        boxShadow: 3,
+                      },
+                    }}
+                    onClick={() => {
+                      dispatch(setCurrentStep(s.stepNo));
+                      if (!s.active) {
+                        dispatch(
+                          setStepStatus({ stepIndex: s.stepNo, status: true })
+                        );
+                      }
+                    }}
+                  >
+                    <CardHeader
+                      title={
+                        s?.progress == 1 ? (
+                          <CheckCircleIcon
+                            sx={{ color: green[500], height: 25, width: 25 }}
+                          />
+                        ) : (
+                          <CircularProgress
+                            variant="determinate"
+                            value={s?.progress * 100}
+                            sx={{ height: 25, width: 25 }}
+                          />
+                        )
+                      }
+                      action={
+                        <Box>
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setEditingStep(s);
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => {
+                              dispatch(deleteStep(s?.data?._id, id));
+                            }}
+                          >
+                            <DeleteIcon sx={{ color: red[500] }} />
+                          </IconButton>
+                        </Box>
+                      }
+                    />
+                    <CardContent>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 2,
+                          color: "black",
+                        }}
+                      >
+                        <img
+                          src={exercise?.image_url[0]}
+                          alt="exercise"
+                          style={{
+                            width: "40%",
+                            height: "100%",
+                            borderRadius: "20px",
+                            objectFit: "cover",
+                            border: "1px solid black",
+                          }}
+                        />
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 1,
+                          }}
+                        >
+                          {s.data?.title}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              flexWrap: "wrap",
+                              gap: 1,
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                                fontSize: 15,
+                              }}
+                            >
+                              <AccessTimeFilledIcon />
+                              {s.data?.time}
+                            </Box>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                fontSize: 15,
+                              }}
+                            >
+                              <BoltIcon />
+                              {s.data?.calories} kcal
+                            </Box>
+                          </Box>
+                        </Box>
+
+                        <Drawer
+                          anchor="right"
+                          onClose={() => setEditingStep(null)}
+                          open={editingStep !== null}
+                        >
+                          <UpdateManualStep
+                            setEditingStep={setEditingStep}
+                            data={editingStep?.data}
+                            id={id}
+                          />
+                        </Drawer>
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </>
               );
             })
           )}

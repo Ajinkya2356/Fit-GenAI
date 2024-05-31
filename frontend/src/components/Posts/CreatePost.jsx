@@ -17,7 +17,7 @@ const CreatePost = ({ setDrawer }) => {
         display: "flex",
         flexDirection: "column",
         gap: "15px",
-        minWidth: "400px",
+        minWidth: "300px",
       }}
     >
       <h1>Create Post</h1>

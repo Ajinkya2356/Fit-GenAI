@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Box, TextField, Drawer } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getExerciseAction } from "../../../Redux/exercise/exerciseSlice";
+import {
+  clearErrors,
+  getExerciseAction,
+} from "../../../Redux/exercise/exerciseSlice";
 import SearchIcon from "@mui/icons-material/Search";
 import { InputAdornment } from "@mui/material";
 import ExerciseCard from "./ExerciseCard";
@@ -12,6 +15,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import { Button } from "@mui/material";
 import AddExercise from "./AddExercise";
+import Notification from "../common/Notification";
 const Exercises = () => {
   const dispatch = useDispatch();
   const { exercises, error, loading } = useSelector((state) => state.EXERCISE);
@@ -24,7 +28,12 @@ const Exercises = () => {
     }, 1000);
     return () => clearTimeout(getData);
   }, [dispatch, searchKey, difficulty]);
-
+  useEffect(() => {
+    if (error) {
+      Notification(error, "danger");
+      dispatch(clearErrors());
+    }
+  }, [error]);
   const [open, setOpen] = useState(false);
   return (
     <Container
@@ -155,7 +164,7 @@ const Exercises = () => {
             <CircularProgress />
           </Box>
         ) : (
-          exercises?.map((item, index) => {
+          exercises.map((item, index) => {
             return <ExerciseCard item={item} key={index} />;
           })
         )}

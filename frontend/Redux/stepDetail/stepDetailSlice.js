@@ -212,6 +212,9 @@ const stepSlice = createSlice({
     updateStepSuccess: (state, action) => {
       state.loading = false;
     },
+    clearErrors:(state,action)=>{
+      state.error=null;
+    }
   },
 });
 export const {
@@ -229,5 +232,6 @@ export const {
   setStepRequest,
   updateStepReq,
   updateStepSuccess,
+  clearErrors
 } = stepSlice.actions;
 export default stepSlice.reducer;

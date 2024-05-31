@@ -120,7 +120,7 @@ export const createExercise = (exerciseData) => async (dispatch) => {
       data,
       config
     );
-    dispatch(getExerciseSuccess(response.data.data));
+    dispatch(getExerciseAction("", ""));
   } catch (e) {
     dispatch(globalErrorCatch(e.response.data.message));
   }

@@ -39,6 +39,7 @@ const ExerciseDetail = ({ exercise }) => {
               gap: "10px",
               alignItems: "center",
               justifyContent: "space-between",
+              flexWrap: "wrap",
             }}
           >
             <Typography
@@ -48,6 +49,7 @@ const ExerciseDetail = ({ exercise }) => {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
+                flexWrap:"wrap"
               }}
             >
               {exercise.name}
@@ -57,6 +59,7 @@ const ExerciseDetail = ({ exercise }) => {
                 display: "flex",
                 flexDirection: "row",
                 gap: "10px",
+                flexWrap:"wrap"
               }}
             >
               <Chip
@@ -85,6 +88,7 @@ const ExerciseDetail = ({ exercise }) => {
               alignItems: "center",
               justifyContent: "space-between",
               width: "100%",
+              flexWrap: "wrap",
             }}
           >
             <div style={{ width: "50%" }}>

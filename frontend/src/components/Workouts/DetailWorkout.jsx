@@ -92,7 +92,7 @@ const DetailWorkout = () => {
                 display: "flex",
                 alignSelf: "flex-end",
                 flexDirection: "row",
-                /* flexWrap: "wrap", */
+                flexWrap: "wrap",
                 gap: "1%",
                 width: "100%",
                 /* border: "2px solid white", */
@@ -123,7 +123,7 @@ const DetailWorkout = () => {
                     }
                     alt="Workout"
                     style={{
-                      height: "400px",
+                      height: "auto",
                       width: "100%",
                       objectFit: "cover",
                       borderRadius: "30px",

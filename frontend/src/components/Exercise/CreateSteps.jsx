@@ -1,7 +1,8 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearErrors,
   getGeneratedSteps,
   getSteps,
   saveGeneratedSteps,
@@ -14,9 +15,14 @@ import Notification from "../common/Notification";
 const CreateSteps = ({ name, id, toggleDrawer }) => {
   const { generatedSteps, loading, error } = useSelector((state) => state.STEP);
   const dispatch = useDispatch();
+  const [title, setTitle] = useState("Generate Steps");
   useEffect(() => {
     if (error) {
+      setTitle("Regenerate Steps");
       Notification("Error Occured", "danger");
+      dispatch(clearErrors());
+    } else {
+      setTitle("Generate Steps");
     }
   }, [error]);
   return (
@@ -115,10 +121,10 @@ const CreateSteps = ({ name, id, toggleDrawer }) => {
           }}
           onClick={() => {
             dispatch(getGeneratedSteps(name));
-            Notification("Steps Generated", "success");
+            Notification("Steps Generating", "success");
           }}
         >
-          Generate Steps
+          {title}
         </Button>
         <Button
           variant="contained"

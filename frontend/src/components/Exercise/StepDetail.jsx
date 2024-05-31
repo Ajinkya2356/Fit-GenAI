@@ -3,7 +3,7 @@ import React from "react";
 import VerticalLinearStepper from "./Stepper";
 import { useSelector } from "react-redux";
 
-const StepDetail = ({ currentStep, combineSteps,color }) => {
+const StepDetail = ({ currentStep, combineSteps, color }) => {
   return (
     <Container
       style={{
@@ -19,7 +19,7 @@ const StepDetail = ({ currentStep, combineSteps,color }) => {
           color: color,
         }}
       >
-        Step {currentStep.stepNo}
+        {currentStep?.data?.title} Step
       </Typography>
       <VerticalLinearStepper
         currentStep={currentStep}

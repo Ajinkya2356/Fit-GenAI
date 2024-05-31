@@ -43,7 +43,7 @@ const UpdateManualStep = ({ setEditingStep, data, id }) => {
     <Container
       style={{
         minWidth: 300,
-        maxWidth: 500,
+        maxWidth: 300,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

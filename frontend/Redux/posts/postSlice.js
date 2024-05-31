@@ -157,8 +157,7 @@ export const createPost = (data) => async (dispatch, getState) => {
       postData,
       config
     );
-    const { posts } = getState().posts;
-    dispatch(getPostsSuccess({ posts: [...posts, response.data.data.post] }));
+    dispatch(getPosts());
   } catch (error) {
     dispatch(catchError(error.response.data.message));
   }

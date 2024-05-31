@@ -1,129 +1,85 @@
-import React, { useEffect } from "react";
-import { Chip, Container, Typography } from "@mui/material";
-const colorMap = {
-  beginner: "#00FF00",
-  intermediate: "#FFA500",
-  advanced: "#FF0000",
-};
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  IconButton,
+  Typography,
+  Chip,
+} from "@mui/material";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import ScaleIcon from "@mui/icons-material/Scale";
-import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
-import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { useDispatch } from "react-redux";
 import {
   likeAction,
   dislikeAction,
 } from "../../../Redux/exercise/exerciseSlice";
-import Like from "./Like";
+
+const colorMap = {
+  beginner: "#00FF00",
+  intermediate: "#FFA500",
+  advanced: "#FF0000",
+};
 
 const ExerciseCard = ({ exercise, ind, workoutId }) => {
   const dispatch = useDispatch();
 
   return (
-    <Container
+    <Card
       sx={{
-        margin: "20px 0 ",
+        margin: "20px 0",
         display: "flex",
         flexDirection: "column",
         gap: "20px",
-       /*  border: "2px solid white", */
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          minWidth: "50%",
-          gap: "5%",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography
-          variant="body1"
-          color="black"
-          sx={{
-            backgroundColor: "white",
-            padding: "2%",
-            borderRadius: "20px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            width: "30%",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "1.5em",
-              fontWeight: "bold",
-              textAlign: "center",
-            }}
-          >
-            {exercise.exercise.name}
-          </div>
-          <img
-            src={exercise.exercise.image_url[0]}
-            style={{
-              width: "100%",
-              height: "100px",
-
-              alignSelf: "center",
-            }}
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <CardMedia
+            component="video"
+            controls
+            src={exercise.exercise?.video_url}
+            style={{ borderRadius: "0px 0px 10px 10px" }}
           />
-          <div>{exercise.exercise.description}</div>
-          <Chip
-            sx={{
-              backgroundColor: colorMap[exercise.exercise.difficulty_level],
-            }}
-            label={exercise.exercise.difficulty_level.toUpperCase()}
-          />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <FitnessCenterIcon />
-            Sets : {exercise.sets}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <DirectionsRunIcon />
-            Reps : {exercise.reps}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <ScaleIcon />
-            Weights : {exercise.weight}
-          </div>
-        </Typography>
-        <div
-          style={{
-            /* border:"2px solid white", */
-            borderRadius: 20,
-            display: "flex",
-            justifyContent: "center",
-            width: "60%",
-            boxShadow: "0px 3px 10px #FFFFFF",
-          }}
-        >
-          <video controls width="100%" style={{ borderRadius: 20 }}>
-            <source src={exercise.exercise?.video_url} type="video/webm" />
-          </video>
-        </div>
-      </div>
-    </Container>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <CardContent>
+            <Typography variant="h5" component="div">
+              {exercise.exercise.name}
+            </Typography>
+            <CardMedia
+              component="img"
+              image={exercise.exercise.image_url[0]}
+              style={{ width: "100%", height: "auto" }}
+            />
+            <Typography variant="body2" color="text.secondary">
+              {exercise.exercise.description}
+            </Typography>
+            <Chip
+              sx={{
+                backgroundColor: colorMap[exercise.exercise.difficulty_level],
+              }}
+              label={exercise.exercise.difficulty_level.toUpperCase()}
+            />
+            <Grid container spacing={1} direction="column">
+              <Grid item xs={4}>
+                <FitnessCenterIcon /> Sets: {exercise.sets}
+              </Grid>
+              <Grid item xs={4}>
+                <DirectionsRunIcon /> Reps: {exercise.reps}
+              </Grid>
+              <Grid item xs={4}>
+                <ScaleIcon /> Weights: {exercise.weight}
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Grid>
+      </Grid>
+    </Card>
   );
 };
 
