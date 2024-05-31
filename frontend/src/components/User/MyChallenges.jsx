@@ -6,9 +6,10 @@ import {
   getUserChallenges,
 } from "../../../Redux/challenge/challengeSlice";
 import { useNavigate } from "react-router-dom";
-import { Box, CircularProgress, Typography, IconButton } from "@mui/material";
+import { Box, CircularProgress, Typography, IconButton,Card,CardContent } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { red } from '@mui/material/colors';
 const MyChallenges = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,16 +18,9 @@ const MyChallenges = () => {
     dispatch(getUserChallenges());
   }, []);
   return (
-    <Container
-      maxWidth={false}
-      style={{
-        backgroundColor: "#333",
-        gap: "20px",
-        padding: "20px",
-      }}
-    >
-      {userChallenges.length == 0 ? (
-        <Box style={{ display: "flex", flex: 1 }}>
+    <Container maxWidth={false} sx={{ backgroundColor: "#333", gap: 2, p: 2 }}>
+      {userChallenges.length === 0 ? (
+        <Box sx={{ display: "flex", flex: 1 }}>
           <Typography variant="h3" color="white">
             No Challenges Found
           </Typography>
@@ -46,79 +40,70 @@ const MyChallenges = () => {
               <CircularProgress />
             </Box>
           ) : (
-            <Box
-              style={{
+            <Card
+              sx={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
                 justifyContent: "space-between",
-                color: "white",
+                alignItems: "center",
+                boxShadow: 3,
+                p: 1,
+                m: 1,
+                borderRadius: 2,
+                gap: 2,
+                cursor: "pointer",
+                "&:hover": {
+                  boxShadow: 6,
+                },
+              }}
+              onClick={() => {
+                navigate(`/challenges/${challenge._id}`);
               }}
             >
-              <div
-                style={{
+              <Box
+                sx={{
                   display: "flex",
-                  justifyContent: "space-between",
                   flexDirection: "row",
-                  boxShadow: "0 0 10px #fff, 0 0 5px #fff",
-                  padding: 5,
-                  margin: 10,
-                  borderRadius: "20px",
-                  gap: 20,
-                  cursor: "pointer",
+                  alignItems: "center",
+                  gap: 2,
                 }}
               >
-                <div
+                <img
+                  src={challenge.cover_image}
+                  alt="challenge"
                   style={{
-                    /*     border: "2px solid red", */
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 20,
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover",
+                    borderRadius: "20%",
                   }}
-                  onClick={() => {
-                    navigate(`/challenges/${challenge._id}`);
+                />
+                <Box>
+                  <Typography variant="h6">{challenge.name}</Typography>
+                  <Typography variant="body1">
+                    {challenge.description}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box>
+                <IconButton
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    navigate(`/challenges/update/${challenge._id}`);
                   }}
                 >
-                  <img
-                    src={challenge.cover_image}
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      objectFit: "cover",
-                      borderRadius: "20%",
-                    }}
-                  />
-                  <div
-                    style={
-                      {
-                        /* border: "2px solid red", */
-                      }
-                    }
-                  >
-                    <Typography variant="h6">{challenge.name}</Typography>
-                    <Typography variant="body1">
-                      {challenge.description}
-                    </Typography>
-                  </div>
-                </div>
-                <div>
-                  <IconButton
-                    onClick={() => {
-                      navigate(`/challenges/update/${challenge._id}`);
-                    }}
-                  >
-                    <EditIcon style={{ color: "white" }} />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      dispatch(deleteChallenge(challenge._id));
-                    }}
-                  >
-                    <DeleteIcon style={{ color: "red" }} />
-                  </IconButton>
-                </div>
-              </div>
-            </Box>
+                  <EditIcon  />
+                </IconButton>
+                <IconButton
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    dispatch(deleteChallenge(challenge._id));
+                  }}
+                >
+                  <DeleteIcon sx={{ color: red[500] }} />
+                </IconButton>
+              </Box>
+            </Card>
           );
         })
       )}

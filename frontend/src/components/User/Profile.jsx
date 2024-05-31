@@ -17,6 +17,7 @@ import {
 } from "../../../Redux/user/userSlice";
 import { CircularProgress } from "@mui/material";
 import Notification from "../common/Notification";
+import {FormalDate} from "../Challenge/Card"
 const Profile = () => {
   const { user, isAuthenticated, loading, error } = useSelector(
     (state) => state.USER
@@ -145,14 +146,14 @@ const Profile = () => {
                   id="outlined-basic"
                   label={key}
                   variant="outlined"
-                  readOnly={key === "createdAt"}
+                  disabled={key == "Created At"}
                   value={
-                    key == "createdAt"
+                    key == "Created At"
                       ? FormalDate(createdAt)
                       : StateToName[key]
                   }
                   onChange={(e) => {
-                    if (key !== "createdAt") NameToState[key](e.target.value);
+                    if (key !== "Created At") NameToState[key](e.target.value);
                   }}
                   sx={{ margin: "1rem", width: "100%" }}
                 />

@@ -23,7 +23,7 @@ import {
 } from "../../../Redux/exercise/exerciseSlice";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import Notification from "../common/Notification";
-import {CircularProgress} from "@mui/material";
+import { CircularProgress } from "@mui/material";
 const EditExercise = () => {
   const { id } = useParams();
   const navigate = useNavigate();

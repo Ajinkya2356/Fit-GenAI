@@ -3,8 +3,10 @@ import {
   CircularProgress,
   Container,
   Drawer,
+  Card,CardContent,
   Typography,
 } from "@mui/material";
+import { red } from '@mui/material/colors';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -26,113 +28,87 @@ const MyExercises = () => {
   const { userExercises, loading } = useSelector((state) => state.EXERCISE);
 
   return (
-    <Container
-      maxWidth={false}
-      style={{
-        backgroundColor: "#333",
-        gap: "20px",
-        padding: "20px",
-      }}
-    >
-      {userExercises.length == 0 ? (
-        <Box style={{ display: "flex", flex: 1 }}>
-          <Typography variant="h3" color="white">
-            No Exercises Found
-          </Typography>
-        </Box>
-      ) : (
-        userExercises.map((exercise, index) => {
-          return loading ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <CircularProgress />
-            </Box>
-          ) : (
-            <Box
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                color: "white",
-              }}
-            >
-              <div
+    <Container maxWidth={false} sx={{ backgroundColor: '#333', gap: 2, p: 2 }}>
+    {userExercises.length === 0 ? (
+      <Box sx={{ display: 'flex', flex: 1 }}>
+        <Typography variant='h3' color='white'>
+          No Exercises Found
+        </Typography>
+      </Box>
+    ) : (
+      userExercises.map((exercise, index) => {
+        return loading ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Card
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              boxShadow: 3,
+              p: 1,
+              m: 1,
+              borderRadius: 2,
+              gap: 2,
+              cursor: 'pointer',
+              '&:hover': {
+                boxShadow: 6,
+              },
+            }}
+            onClick={() => {
+              navigate(`/exercise/${exercise._id}`);
+            }}
+          >
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+              <img
+                src={exercise.image_url}
+                alt='exercise'
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexDirection: "row",
-                  boxShadow: "0 0 10px #fff, 0 0 5px #fff",
-                  padding: 5,
-                  margin: 10,
-                  borderRadius: "20px",
-                  gap: 20,
-                  cursor: "pointer",
+                  width: '100px',
+                  height: '100px',
+                  objectFit: 'cover',
+                  borderRadius: '20%',
+                }}
+              />
+              <Box>
+                <Typography variant='h6'>{exercise.name}</Typography>
+                <Typography variant='body1'>{exercise.description}</Typography>
+              </Box>
+            </Box>
+            <Box>
+              <IconButton
+                onClick={(event) => {
+                  event.stopPropagation();
+                  navigate(`/exercise/update/${exercise._id}`);
                 }}
               >
-                <div
-                  style={{
-                    /*     border: "2px solid red", */
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 20,
-                  }}
-                  onClick={() => {
-                    navigate(`/exercise/${exercise._id}`);
-                  }}
-                >
-                  <img
-                    src={exercise.image_url}
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      objectFit: "cover",
-                      borderRadius: "20%",
-                    }}
-                  />
-                  <div
-                    style={
-                      {
-                        /* border: "2px solid red", */
-                      }
-                    }
-                  >
-                    <Typography variant="h6">{exercise.name}</Typography>
-                    <Typography variant="body1">
-                      {exercise.description}
-                    </Typography>
-                  </div>
-                </div>
-                <div>
-                  <IconButton
-                    onClick={() => {
-                      navigate(`/exercise/update/${exercise._id}`);
-                    }}
-                  >
-                    <EditIcon style={{ color: "white" }} />
-                  </IconButton>
-
-                  <IconButton
-                    onClick={() => {
-                      dispatch(deleteExercise(exercise?._id));
-                    }}
-                  >
-                    <DeleteIcon style={{ color: "red" }} />
-                  </IconButton>
-                </div>
-              </div>
+                <EditIcon  />
+              </IconButton>
+              <IconButton
+                onClick={(event) => {
+                  event.stopPropagation();
+                  dispatch(deleteExercise(exercise?._id));
+                }}
+              >
+                <DeleteIcon sx={{ color: red[500] }} />
+              </IconButton>
             </Box>
-          );
-        })
-      )}
-    </Container>
+          </Card>
+        );
+      })
+    )}
+  </Container>
   );
 };
 
