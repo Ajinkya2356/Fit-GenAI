@@ -56,9 +56,10 @@ export const saveGeneratedSteps = (steps, id) => async (dispatch) => {
       config
     );
   } catch (error) {
+    console.log(error)
     dispatch(
       setError(
-        error.response?.data ? error.response.data.message : error.message
+        error.response?.data ? error.response.data: error.message
       )
     );
   }
@@ -160,6 +161,7 @@ const stepSlice = createSlice({
       state.loading = false;
     },
     setError: (state, action) => {
+      state.loading=false;
       state.error = action.payload;
     },
     setStepStatus: (state, action) => {
@@ -182,6 +184,9 @@ const stepSlice = createSlice({
     },
     setCurrentStep: (state, action) => {
       state.currentStep = action.payload;
+    },
+    setCurrentIndex:(state,action)=>{
+      state.currentIndex=action.payload;
     },
     setCurrentVideo: (state, action) => {
       state.currentVideo = action.payload;
@@ -220,6 +225,7 @@ export const {
   setStepStatus,
   setStepProgress,
   setCurrentStep,
+  setCurrentIndex,
   setCurrentVideo,
   setGenerateSteps,
   saveGenerateSteps,

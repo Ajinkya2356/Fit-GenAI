@@ -8,8 +8,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import jsf from "json-schema-faker";
 const schema = zod.object({
   title: zod.string(),
-  calories: zod.string(),
-  time: zod.string(),
+  calories: zod.number(),
+  time: zod.number(),
   exerciseID: zod.string(),
   steps: zod.array(
     zod.object({
@@ -61,8 +61,8 @@ const generateSteps = AsyncHandler(async (req, res) => {
   [
     {
       "title": "[EXERCISE_TITLE]",
-      "calories": "[CALORIES_PER_MINUTE]",
-      "time": "[RECOMMENDED_TIME]",
+      "calories": "[CALORIES IN SINGLE NUMBER]",
+      "time": "[RECOMMENDED_TIME IN SINGLE NUMBER]",
       "steps": [
         {
           "heading": "[STEP_1_HEADING]",
@@ -121,13 +121,12 @@ const saveSteps = AsyncHandler(async (req, res) => {
 const updateStep = AsyncHandler(async (req, res) => {
   try {
     const { step } = req.body;
-    console.log(step);
     const updatedStep = await Step.findByIdAndUpdate(
       step._id,
       {
         title: step.title,
         calories: step.calories,
-        time: step.time,
+        time: parseInt(step.time),
         exerciseID: step.exerciseID,
         steps: step.steps,
       },
@@ -154,4 +153,11 @@ const deleteStep = AsyncHandler(async (req, res) => {
     throw new apiError(400, error.message);
   }
 });
-export { createStep, getSteps, generateSteps, saveSteps, updateStep,deleteStep };
+export {
+  createStep,
+  getSteps,
+  generateSteps,
+  saveSteps,
+  updateStep,
+  deleteStep,
+};

@@ -24,6 +24,7 @@ const Posts = () => {
         display: "flex",
         flexDirection: "column",
         backgroundColor: "#333",
+        alignItems: "center",
       }}
     >
       <Box
@@ -47,6 +48,7 @@ const Posts = () => {
           justifyContent: "center",
           gap: 10,
           flexWrap: "wrap",
+          margin: "30px 0px ",
         }}
       >
         {posts.map((post, index) => {

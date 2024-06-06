@@ -29,6 +29,7 @@ const Footer = () => {
         color: "white",
         py: 3,
       }}
+      maxWidth={false}
     >
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4}>

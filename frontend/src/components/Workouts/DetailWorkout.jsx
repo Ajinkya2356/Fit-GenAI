@@ -92,7 +92,7 @@ const DetailWorkout = () => {
                 display: "flex",
                 alignSelf: "flex-end",
                 flexDirection: "row",
-                /* flexWrap: "wrap", */
+                flexWrap: "wrap",
                 gap: "1%",
                 width: "100%",
                 /* border: "2px solid white", */
@@ -100,72 +100,26 @@ const DetailWorkout = () => {
             >
               <div
                 style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  alignSelf: "flex-start",
-                  width: "100%",
                   /* border: "2px solid white", */
-                  justifyContent: "space-between",
+                  width: "60%",
                 }}
               >
-                <div
+                <img
+                  src={
+                    workout?.cover_image
+                      ? workout?.cover_image
+                      : "https://source.unsplash.com/random"
+                  }
+                  alt="Workout"
                   style={{
-                    /* border: "2px solid white", */
-                    flex: 1,
+                    height: "auto",
+                    width: "100%",
+                    objectFit: "cover",
+                    borderRadius: "30px",
                   }}
-                >
-                  <img
-                    src={
-                      workout?.cover_image
-                        ? workout?.cover_image
-                        : "https://source.unsplash.com/random"
-                    }
-                    alt="Workout"
-                    style={{
-                      height: "400px",
-                      width: "100%",
-                      objectFit: "cover",
-                      borderRadius: "30px",
-                    }}
-                  />
-                </div>
-                <div
-                  style={{
-                    /* border: "2px solid red", */
-                    height: "100%",
-                    minWidth: "200px",
-                    padding: "15px",
-                  }}
-                >
-                  <Typography variant="h6" color="white">
-                    Participants
-                  </Typography>
-                  <div
-                    style={{
-                      padding: "15px",
-                      overflow: "auto",
-                      maxHeight: "200px",
-                    }}
-                  >
-                    {workout?.participants.map((p, i) => {
-                      return (
-                        <div
-                          key={i}
-                          style={{
-                            display: "flex",
-                            gap: "10px",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Avatar src={p.avatar} alt={p.name} />
-                          <Typography color="white">{p.name}</Typography>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
+                />
               </div>
+
               <Typography
                 variant="h6"
                 color="white"

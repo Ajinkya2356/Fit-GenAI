@@ -12,7 +12,11 @@ import {
   setStepProgress,
   setStepStatus,
 } from "../../../Redux/stepDetail/stepDetailSlice";
-export default function VerticalLinearStepper({ currentStep, combineSteps,color }) {
+export default function VerticalLinearStepper({
+  currentStep,
+  combineSteps,
+  color,
+}) {
   const dispatch = useDispatch();
   const [activeStep, setActiveStep] = React.useState(0);
   useEffect(() => {
@@ -59,13 +63,7 @@ export default function VerticalLinearStepper({ currentStep, combineSteps,color 
         {currentStep &&
           combineSteps.map((step, index) => (
             <Step key={index}>
-              <StepLabel
-                optional={
-                  index === 2 ? (
-                    <Typography variant="caption">Last step</Typography>
-                  ) : null
-                }
-              >
+              <StepLabel>
                 <Typography variant="h5" style={{ color: color }}>
                   {step.heading}
                 </Typography>
@@ -107,7 +105,7 @@ export default function VerticalLinearStepper({ currentStep, combineSteps,color 
                     <Button
                       disabled={index === 0}
                       onClick={handleBack}
-                      sx={{ mt: 1, mr: 1 }}
+                      sx={{ mt: 1, mr: 1, color: "white" }}
                     >
                       Back
                     </Button>

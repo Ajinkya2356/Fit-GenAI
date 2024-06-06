@@ -31,7 +31,7 @@ const Section = () => {
         <Slide>Elevate Your Fitness Journey to New Heights</Slide>
       </Typography>
       <Box display="flex" flexDirection="column" padding="5%">
-        {exercises.slice(0,4).map((item, index) => (
+        {exercises.slice(0, 4).map((item, index) => (
           <Box
             key={index}
             display="flex"

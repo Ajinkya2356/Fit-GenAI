@@ -6,11 +6,11 @@ const stepSchema = new mongoose.Schema(
       required: true,
     },
     calories: {
-      type: String,
+      type: Number,
       required: true,
     },
     time: {
-      type: String,
+      type: Number,
       required: true,
     },
     steps: [

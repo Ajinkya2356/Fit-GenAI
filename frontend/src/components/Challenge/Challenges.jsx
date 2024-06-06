@@ -48,6 +48,7 @@ const Challenges = () => {
           display: "flex",
           backgroundColor: "#333",
           flexWrap: "wrap",
+          cursor: "pointer",
         }}
       >
         <>

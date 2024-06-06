@@ -47,6 +47,11 @@ const ExerciseCard = ({ item }) => {
             display: "flex",
             flexDirection: "column",
           }}
+          onClick={() =>
+            navigate(`/exercise/${item?._id}`, {
+              state: item,
+            })
+          }
         >
           <Box
             style={{
@@ -60,11 +65,6 @@ const ExerciseCard = ({ item }) => {
               title={item?.name}
               textoverflow="ellipsis"
               subheader={FormalDate(item?.createdAt)}
-              onClick={() =>
-                navigate(`/exercise/${item?._id}`, {
-                  state: item,
-                })
-              }
             ></CardHeader>
             <Chip
               label={item?.difficulty_level.toUpperCase()}
