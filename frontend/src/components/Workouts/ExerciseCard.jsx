@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Chip, Container, Typography } from "@mui/material";
+import { Box, Chip, Container, Typography } from "@mui/material";
 const colorMap = {
   beginner: "#00FF00",
   intermediate: "#FFA500",
@@ -10,6 +10,7 @@ import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import ScaleIcon from "@mui/icons-material/Scale";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
+import ReactPlayer from "react-player";
 import { useDispatch } from "react-redux";
 import {
   likeAction,
@@ -19,7 +20,7 @@ import Like from "./Like";
 
 const ExerciseCard = ({ exercise, ind, workoutId }) => {
   const dispatch = useDispatch();
-
+  console.log(exercise);
   return (
     <Container
       sx={{
@@ -27,100 +28,118 @@ const ExerciseCard = ({ exercise, ind, workoutId }) => {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
-       /*  border: "2px solid white", */
+        cursor: "pointer",
+        justifyContent: "center",
+        backgroundColor: "#444",
+        borderRadius: "10px",
+        /* border: "2px solid white" */
       }}
     >
       <div
         style={{
           display: "flex",
           flexDirection: "row",
-          minWidth: "50%",
+          flexWrap: "wrap",
+
           gap: "5%",
-          justifyContent: "space-between",
+          justifyContent: "center",
+          alignItems: "center",
+
+          /* border: "2px solid white", */
         }}
       >
-        <Typography
-          variant="body1"
-          color="black"
-          sx={{
-            backgroundColor: "white",
-            padding: "2%",
-            borderRadius: "20px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            width: "30%",
-          }}
-        >
+        <div style={{ maxWidth: "100%" }}>
           <div
             style={{
-              fontSize: "1.5em",
+              fontSize: "2em",
               fontWeight: "bold",
               textAlign: "center",
             }}
           >
             {exercise.exercise.name}
           </div>
-          <img
-            src={exercise.exercise.image_url[0]}
+          <ReactPlayer
+            url={exercise.exercise.video_url}
+            controls={true}
+            light={
+              <img
+                src={exercise.exercise.image_url[0]}
+                style={{
+                  borderRadius: "10px",
+                  maxWidth: "100%",
+                }}
+              />
+            }
             style={{
-              width: "100%",
-              height: "100px",
-
-              alignSelf: "center",
+              borderRadius: "20px",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+              margin: "10px 0px",
+              maxWidth: "100%",
             }}
           />
-          <div>{exercise.exercise.description}</div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            /* maxWidth:"50%", */
+            flex: 1,
+            gap: "10px",
+
+            /* border:"2px solid white" */
+          }}
+        >
+          <Typography variant="body1">
+            {exercise.exercise.description}
+          </Typography>
           <Chip
             sx={{
               backgroundColor: colorMap[exercise.exercise.difficulty_level],
             }}
             label={exercise.exercise.difficulty_level.toUpperCase()}
           />
-          <div
+          <Box
             style={{
               display: "flex",
-              alignItems: "center",
-              gap: "5px",
+              gap: "10%",
+              /* justifyContent: "center", */
+              padding: 10,
+              flexWrap: "wrap",
+              /* alignItems: "center", */
+             /*  border: "2px solid white", */
             }}
           >
-            <FitnessCenterIcon />
-            Sets : {exercise.sets}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <DirectionsRunIcon />
-            Reps : {exercise.reps}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-            }}
-          >
-            <ScaleIcon />
-            Weights : {exercise.weight}
-          </div>
-        </Typography>
-        <div
-          style={{
-            /* border:"2px solid white", */
-            borderRadius: 20,
-            display: "flex",
-            justifyContent: "center",
-            width: "60%",
-            boxShadow: "0px 3px 10px #FFFFFF",
-          }}
-        >
-          <video controls width="100%" style={{ borderRadius: 20 }}>
-            <source src={exercise.exercise?.video_url} type="video/webm" />
-          </video>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <FitnessCenterIcon />
+              Sets : {exercise.sets}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <DirectionsRunIcon />
+              Reps : {exercise.reps}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+              }}
+            >
+              <ScaleIcon />
+              Weights : {exercise.weight}
+            </div>
+          </Box>
         </div>
       </div>
     </Container>

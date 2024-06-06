@@ -485,6 +485,13 @@ const addParticipantCoins = AsyncHandler(async (req, res) => {
       }
       return participant;
     });
+    const user = await User.findByIdAndUpdate(
+      userID,
+      {
+        $inc: { coinBalance: val },
+      },
+      { new: true }
+    );
     await challenge.save();
     return res
       .status(200)

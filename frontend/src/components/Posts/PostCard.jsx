@@ -64,7 +64,7 @@ export default function PostCard({ post }) {
   const disliked = post?.dislikes?.includes(user?.user?._id);
 
   return (
-    <Card sx={{ width: "sm", height: "auto" }}>
+    <Card sx={{ width: 330, height: "auto" }}>
       <CardHeader
         avatar={
           <Avatar

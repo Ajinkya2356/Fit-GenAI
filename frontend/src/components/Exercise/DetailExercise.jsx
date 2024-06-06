@@ -15,6 +15,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import {
   deleteStep,
   getSteps,
+  setCurrentIndex,
   setCurrentStep,
   setStepStatus,
 } from "../../../Redux/stepDetail/stepDetailSlice";
@@ -71,7 +72,6 @@ const DetailExercise = () => {
           gap: 10,
         }}
       >
-        Category
         {exercise?.category.map((c, i) => {
           return (
             <Chip
@@ -86,16 +86,17 @@ const DetailExercise = () => {
             />
           );
         })}
+        <Chip
+          label={exercise?.difficulty_level.toUpperCase()}
+          style={{
+            color: "black",
+            maxWidth: "200px",
+            backgroundColor: "floralwhite",
+            alignSelf: "flex-end",
+          }}
+        />
       </Typography>
-      <Chip
-        label={exercise?.difficulty_level.toUpperCase()}
-        style={{
-          color: "black",
-          maxWidth: "200px",
-          backgroundColor: "floralwhite",
-          alignSelf: "flex-end",
-        }}
-      />
+
       <Typography
         variant="h3"
         color="white"
@@ -113,6 +114,23 @@ const DetailExercise = () => {
           <Like item={exercise} color={"white"} />
         </Box>
       </Typography>
+      <div style={{ display: "inherit", gap: 10, alignSelf: "flex-end" }}>
+        <IconButton
+          style={{ backgroundColor: "white" }}
+          onClick={() => setDrawer(true)}
+        >
+          <AddIcon style={{ color: "black" }} />
+        </IconButton>
+        <Button
+          onClick={toggleDrawer(true)}
+          variant="contained"
+          style={{
+            alignSelf: "flex-end",
+          }}
+        >
+          Generate Steps with AI
+        </Button>
+      </div>
       <Typography
         variant="h6"
         color="white"
@@ -123,23 +141,6 @@ const DetailExercise = () => {
         }}
       >
         {exercise?.description}
-        <div style={{ display: "inherit", gap: 10 }}>
-          <IconButton
-            style={{ backgroundColor: "white" }}
-            onClick={() => setDrawer(true)}
-          >
-            <AddIcon style={{ color: "black" }} />
-          </IconButton>
-          <Button
-            onClick={toggleDrawer(true)}
-            variant="contained"
-            style={{
-              alignSelf: "flex-end",
-            }}
-          >
-            Generate Steps with AI
-          </Button>
-        </div>
       </Typography>
       <Drawer anchor="right" onClose={() => setDrawer(false)} open={drawer}>
         <CreateManualStep setDrawer={setDrawer} id={id} />
@@ -242,6 +243,7 @@ const DetailExercise = () => {
                   }}
                   onClick={() => {
                     dispatch(setCurrentStep(s.stepNo));
+                    dispatch(setCurrentIndex(i + 1));
                     if (!s.active) {
                       dispatch(
                         setStepStatus({ stepIndex: s.stepNo, status: true })
@@ -263,21 +265,39 @@ const DetailExercise = () => {
                       src={exercise?.image_url[0]}
                       alt="exercise"
                       style={{
-                        width: "40%",
+                        minWidth: "50px",
                         height: "100%",
                         borderRadius: "20px",
                         objectFit: "cover",
-                        border: "1px solid black",
                       }}
                     />
 
                     <div
                       style={{
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
                       }}
                     >
                       {s.data?.title}
+                      {s?.progress == 1 ? (
+                        <CheckCircleIcon
+                          style={{
+                            color: "green",
+                            height: "25px",
+                            width: "25px",
+                          }}
+                        />
+                      ) : (
+                        <CircularProgress
+                          variant="determinate"
+                          value={s?.progress * 100}
+                          style={{
+                            height: "25px",
+                            width: "25px",
+                          }}
+                        />
+                      )}
                       <Box
                         style={{
                           display: "flex",
@@ -295,7 +315,7 @@ const DetailExercise = () => {
                           }}
                         >
                           <AccessTimeFilledIcon />
-                          {s.data?.time}
+                          {s.data?.time} Minutes
                         </div>
                         <div
                           style={{
@@ -337,24 +357,6 @@ const DetailExercise = () => {
                         id={id}
                       />
                     </Drawer>
-                    {s?.progress == 1 ? (
-                      <CheckCircleIcon
-                        style={{
-                          color: "green",
-                          height: "25px",
-                          width: "25px",
-                        }}
-                      />
-                    ) : (
-                      <CircularProgress
-                        variant="determinate"
-                        value={s?.progress * 100}
-                        style={{
-                          height: "25px",
-                          width: "25px",
-                        }}
-                      />
-                    )}
                   </Typography>
                 </div>
               );

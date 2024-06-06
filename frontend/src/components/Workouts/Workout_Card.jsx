@@ -26,7 +26,10 @@ const Workout_Card = ({ workout, onClick }) => {
   return (
     <Card
       onClick={onClick}
-      className={[style.container, { width: "330", height: "auto" }]}
+      className={[
+        style.container,
+        { width: "330", height: "auto", cursor: "pointer"},
+      ]}
     >
       <CardHeader
         title={workout.name}

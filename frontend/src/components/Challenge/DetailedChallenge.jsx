@@ -90,15 +90,7 @@ const DetailedChallenge = () => {
         <Loader />
       ) : (
         <>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignSelf="flex-end"
-            gap={2}
-            style={{
-              padding: "0px 10px",
-            }}
-          >
+          <Box display="flex" alignSelf="flex-end">
             {joined?.length > 0 ? (
               <Button
                 variant="contained"
@@ -304,8 +296,8 @@ const DetailedChallenge = () => {
                 style={{
                   display: "flex",
                   flexDirection: "row",
-                  justifyContent: "space-between",
-                  /*  border: "2px solid white", */
+                  justifyContent: "center",
+                  flexWrap: "wrap",
                   width: "100%",
                 }}
               >
@@ -314,7 +306,6 @@ const DetailedChallenge = () => {
                     backgroundColor: "white",
                     borderRadius: "20px",
                     margin: "10px",
-                    flex: 1,
 
                     height: "100%",
                   }}
@@ -382,25 +373,36 @@ const DetailedChallenge = () => {
                   </Typography>
                 </Box>
               </Box>
-              <Box style={{ padding: 10,display:"flex",flexDirection:"column",gap:10 }}>
-                <Typography variant="h5" color="white">
-                  Winner of the Challenge
+            </Box>
+            <Box
+              style={{
+                padding: 10,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              <Typography variant="h5" color="white">
+                Winner of the Challenge
+              </Typography>
+              <Box className={styles.winner}>
+                <Avatar src={challenge?.winner?.avatar} />
+                <Typography variant="body1" color="white">
+                  {challenge?.winner
+                    ? challenge?.winner?.username
+                    : "Winner To be annouced soon"}
                 </Typography>
-                <Box
-                  className={styles.winner}
-                >
-                  <Avatar src={challenge?.winner?.avatar} />
-                  <Typography variant="body1" color="white">
-                    {challenge?.winner
-                      ? challenge?.winner?.username
-                      : "Winner To be annouced soon"}
-                  </Typography>
-                </Box>
               </Box>
             </Box>
           </Box>
 
-          <Box style={{ width: "90%" }}>
+          <Box
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              maxWidth: "100%",
+            }}
+          >
             <Typography
               variant="h4"
               className={style.title}
@@ -448,6 +450,7 @@ const DetailedChallenge = () => {
                         color: "white",
                         display: "flex",
                         alignItems: "center",
+                        flexWrap: "wrap",
                         gap: 2,
                       }}
                     >
