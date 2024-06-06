@@ -1,4 +1,5 @@
 import express from "express";
+import RateLimiter from "express-rate-limit";
 import userRouter from "./Routes/user.routes.js";
 import categoryRouter from "./Routes/category.routes.js";
 import exerciseRouter from "./Routes/exercise.routes.js";
@@ -13,6 +14,12 @@ import stepRouter from "./Routes/steps.routes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const app = express();
+const limiter = RateLimiter({
+  windowMs: 5 * 60 * 1000,
+  max: 100,
+  message: "Too many requests from this IP, please try again later",
+});
+app.use(limiter);
 app.use(express.json({ limit: "50kb" }));
 app.use(
   cors({
