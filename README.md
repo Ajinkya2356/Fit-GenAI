@@ -11,12 +11,6 @@ Tech Stack Used : React.js, Redux.js, Material UI, Node.js, Express.js, MongoDB,
 - **Challenges**: Users can view and manage their challenges.
 - **Plans**: Users can view and manage their plans.
 
-## Components
-
-- **MyChallenges**: This component displays the challenges of the user. It fetches the challenges from the Redux store and displays them in a Material-UI Card component. Each card has an Edit and Delete button.
-- **MyExercises**: This component displays the exercises of the user. It fetches the exercises from the Redux store and displays them in a Material-UI Card component. Each card has an Edit and Delete button.
-- **Footer**: This component displays a footer with a quick menu, a subscription message, and social media links. It uses Material-UI's Grid for layout, List for the menu, and IconButton for the social media links.
-
 ## Installation
 
 To install the project, follow these steps:
@@ -25,24 +19,24 @@ To install the project, follow these steps:
 2. Start Backend
    1. Navigate to backend directory : `cd backend`
    2. Specify all the environment variables in `.env` file
-      PORT --> `Port for running application`
-      MONGODB_URI --> `Database URL`
-      DATABASE_NAME --> `Name of Database`
-      JWT_SECRET 
-      JWT_EXPIRES_IN --> `Duration of expiry time for access Token`
-      JWT_REFRESH_SECRET
-      JWT_REFRESH_EXPIRES_IN --> `Duration of expiry time for access Token`
-      CLOUDINARY_API_NAME --> `Cloudinary Name`
-      CLOUDINARY_API_KEY --> `Cloudinary API key`
-      CLOUDINARY_API_SECRET --> `Cloudinary Secret`
-      RESET_PASSWORD_SECRET --> `JWT secret for reset password jwt`
-      SMTP_HOST --> `Email protocol`
-      SMTP_PORT 
-      SMTP_SERVICE --> `Service Provider`
-      SMTP_EMAIL --> `Host Email Address`
-      SMTP_PASSWORD --> `Host Email Account password`
-      FRONTEND_URL --> `URL of frontend`
-      LLM_KEY --> `Gemini's Pro vision key`
+      1. PORT --> `Port for running application`
+      2. MONGODB_URI --> `Database URL`
+      3. DATABASE_NAME --> `Name of Database`
+      4. JWT_SECRET 
+      5. JWT_EXPIRES_IN --> `Duration of expiry time for access Token`
+      6. JWT_REFRESH_SECRET
+      7. JWT_REFRESH_EXPIRES_IN --> `Duration of expiry time for access Token`
+      8. CLOUDINARY_API_NAME --> `Cloudinary Name`
+      9. CLOUDINARY_API_KEY --> `Cloudinary API key`
+      10. CLOUDINARY_API_SECRET --> `Cloudinary Secret`
+      11. RESET_PASSWORD_SECRET --> `JWT secret for reset password jwt`
+      12. SMTP_HOST --> `Email protocol`
+      13. SMTP_PORT 
+      14. SMTP_SERVICE --> `Service Provider`
+      15. SMTP_EMAIL --> `Host Email Address`
+      16. SMTP_PASSWORD --> `Host Email Account password`
+      17. FRONTEND_URL --> `URL of frontend`
+      18. LLM_KEY --> `Gemini's Pro vision key`
    3. Install all the dependencies : `npm install`
    4. Start the backend server : `npm run dev`
 3. Start Frontend
