@@ -1,4 +1,4 @@
-# Fitness App
+# FitFusion App
 
 Fitness Application with generative AI features, with various use cases, which will drive your fitness journey easily regardless of any difficulty.
 Tech Stack Used : React.js, Redux.js, Material UI, Node.js, Express.js, MongoDB, Zod, Google Generative AI
