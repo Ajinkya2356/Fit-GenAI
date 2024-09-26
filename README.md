@@ -48,3 +48,5 @@ To install the project, follow these steps:
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 Please Pull Request to the master branch with corresponding suitable message.
+
+## Contributer : Ajinkya Jagtap
